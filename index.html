@@ -103,37 +103,51 @@
     }
 
 
-    /* v1.7 favorito más visible + actualizar rápido */
+    /* v1.8: favorito más visible + un único actualizar bajo el menú */
     .card.mainTeam{
-      border-left:6px solid var(--main)!important;
-      background:linear-gradient(90deg,var(--main2),#fff 48%)!important;
-      border-color:rgba(35,122,53,.35)!important;
+      border:2px solid #155d2c!important;
+      border-left:9px solid #155d2c!important;
+      background:linear-gradient(90deg,#dff1e5 0%,#f3fbf5 56%,#fff 100%)!important;
+      box-shadow:0 8px 22px rgba(21,93,44,.16)!important;
     }
+    .headerActions{
+      margin-left:auto;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:4px;
+      flex:0 0 auto;
+    }
+    .headerActions .adminBtn{margin-left:0}
     .quickRefresh{
-      border:1px solid rgba(35,122,53,.25);
+      width:34px;
+      height:28px;
+      display:inline-grid;
+      place-items:center;
+      border:1px solid rgba(35,122,53,.30);
       background:var(--main2);
       color:var(--main);
       border-radius:999px;
-      padding:7px 10px;
-      font-size:13px;
+      padding:0;
+      font-size:18px;
+      line-height:1;
       font-weight:950;
-      white-space:nowrap;
-      box-shadow:0 4px 12px rgba(21,32,43,.08);
+      box-shadow:0 4px 10px rgba(21,32,43,.08);
       cursor:pointer;
     }
     .quickRefresh.loading{opacity:.75}
     .quickRefresh.ok{background:#e9f7ef;color:#0f7b2f;border-color:#80c28c}
     .quickRefresh.err{background:#fdecec;color:#b42318;border-color:#ef8a8a}
     @media(max-width:520px){
-      .quickRefresh{font-size:0;padding:7px 9px}
-      .quickRefresh::before{content:'↻';font-size:18px;line-height:1}
+      .headerActions{gap:3px}
+      .quickRefresh{width:32px;height:26px;font-size:17px}
     }
 
 </style>
 </head>
 <body>
 <div class="app">
-  <header class="top"><div class="ball">WP</div><div class="title"><h1 id="appTitle">Waterpolo</h1><p id="appSub">Cargando campeonato…</p></div><button class="quickRefresh" id="quickRefreshBtn" type="button" title="Actualizar resultados">↻ Actualizar</button><button class="adminBtn" id="openAdmin" aria-label="Admin">⋯</button></header>
+  <header class="top"><div class="title"><h1 id="appTitle">Waterpolo</h1><p id="appSub">Cargando campeonato…</p></div><div class="headerActions"><button class="adminBtn" id="openAdmin" aria-label="Admin">⋯</button><button class="quickRefresh" id="quickRefreshBtn" type="button" title="Actualizar resultados">↻</button></div></header>
   <section id="banner" class="banner"><small>PRÓXIMO PARTIDO</small><h2>Cargando…</h2></section>
   <main>
     <section id="calendar" class="panel active"><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="calendarList"></div></section>
@@ -143,7 +157,7 @@
   </main>
 </div>
 <nav class="tabs"><div class="tabsInner"><button class="tab active" data-tab="calendar">Calendario</button><button class="tab" data-tab="search">Búsqueda</button><button class="tab" data-tab="groups">Grupos</button><button class="tab" data-tab="finals">Final</button></div></nav>
-<div class="admin" id="admin"><div class="adminBox"><h2>Admin</h2><h3>Configuración</h3><label>URL Apps Script</label><input id="urlInput"><div class="btnRow"><button class="btn" id="saveUrl">Guardar URL</button></div><label>Equipo principal</label><select id="mainTeamSelect"></select><h3>Herramientas</h3><div class="btnRow"><button class="btn" id="refreshBtn">Actualizar resultados</button><button class="btn danger" id="clearBtn">Borrar resultados locales</button></div><p id="updateStatus" class="status"></p><h3>Simulador banner</h3><div class="btnRow"><button class="btn secondary" data-sim="normal">Estado normal</button><button class="btn secondary" data-sim="urgent">Falta &lt; 1 hora</button><button class="btn secondary" data-sim="live">En juego</button><button class="btn secondary" data-sim="auto">Volver automático</button></div><div class="btnRow"><button class="btn secondary" id="closeAdmin">Cerrar</button></div></div></div>
+<div class="admin" id="admin"><div class="adminBox"><h2>Admin</h2><h3>Configuración</h3><label>URL Apps Script</label><input id="urlInput"><div class="btnRow"><button class="btn" id="saveUrl">Guardar URL</button></div><label>Equipo principal</label><select id="mainTeamSelect"></select><h3>Herramientas</h3><div class="btnRow"><button class="btn danger" id="clearBtn">Borrar resultados locales</button></div><p id="updateStatus" class="status"></p><h3>Simulador banner</h3><div class="btnRow"><button class="btn secondary" data-sim="normal">Estado normal</button><button class="btn secondary" data-sim="urgent">Falta &lt; 1 hora</button><button class="btn secondary" data-sim="live">En juego</button><button class="btn secondary" data-sim="auto">Volver automático</button></div><div class="btnRow"><button class="btn secondary" id="closeAdmin">Cerrar</button></div></div></div>
 <script>
 const LS={url:'wp_apps_url', main:'wp_main_team', results:'wp_results', status:'wp_status'};
 let DATA, teams={}, matches=[], results={}, ranks={}, activeDay=null, activePhase=null, simMode='auto';
@@ -179,7 +193,7 @@ function updateQuickRefreshVisibility(tab){
   q.style.display=(tab==='calendar'||tab==='search'||tab==='groups')?'':'none';
 }
 
-function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); $('#banner').style.display=b.dataset.tab==='calendar'?'':'none'; updateQuickRefreshVisibility(b.dataset.tab); if(b.dataset.tab==='search')renderTeamMatches(); }); $('#banner').style.display=''; updateQuickRefreshVisibility('calendar'); $('#openAdmin').onclick=()=>$('#admin').classList.add('open'); $('#closeAdmin').onclick=()=>$('#admin').classList.remove('open'); $('#urlInput').value=localStorage.getItem(LS.url)||''; $('#saveUrl').onclick=()=>{localStorage.setItem(LS.url,$('#urlInput').value.trim()); setStatus('URL guardada.');}; const opts=DATA.teams.slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(t=>`<option value="${t.id}">${up(t.name)}</option>`).join(''); $('#teamSelect').innerHTML=opts; $('#mainTeamSelect').innerHTML=opts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; $('#refreshBtn').onclick=refreshResults; $('#quickRefreshBtn').onclick=refreshResults; $('#clearBtn').onclick=clearResults; $$('[data-sim]').forEach(b=>b.onclick=()=>{simMode=b.dataset.sim; renderBanner();}); }
+function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); $('#banner').style.display=b.dataset.tab==='calendar'?'':'none'; updateQuickRefreshVisibility(b.dataset.tab); if(b.dataset.tab==='search')renderTeamMatches(); }); $('#banner').style.display=''; updateQuickRefreshVisibility('calendar'); $('#openAdmin').onclick=()=>$('#admin').classList.add('open'); $('#closeAdmin').onclick=()=>$('#admin').classList.remove('open'); $('#urlInput').value=localStorage.getItem(LS.url)||''; $('#saveUrl').onclick=()=>{localStorage.setItem(LS.url,$('#urlInput').value.trim()); setStatus('URL guardada.');}; const opts=DATA.teams.slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(t=>`<option value="${t.id}">${up(t.name)}</option>`).join(''); $('#teamSelect').innerHTML=opts; $('#mainTeamSelect').innerHTML=opts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; if($('#quickRefreshBtn')) $('#quickRefreshBtn').onclick=refreshResults; if($('#clearBtn')) $('#clearBtn').onclick=clearResults; $$('[data-sim]').forEach(b=>b.onclick=()=>{simMode=b.dataset.sim; renderBanner();}); }
 function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visiblePhases; $('#dayFilters').innerHTML=days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join(''); $('#phaseFilters').innerHTML=phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join(''); $$('[data-day]').forEach(b=>{let d=b.dataset.day; b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||m.phase===activePhase)); b.onclick=()=>{activeDay=activeDay===d?null:d; renderCalendar()}}); $$('[data-phase]').forEach(b=>{let p=b.dataset.phase; b.disabled=!matches.some(m=>m.phase===p&&(!activeDay||m.dayLabel===activeDay)); b.onclick=()=>{activePhase=activePhase===p?null:p; renderCalendar()}}); }
 function renderAll(){ compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
@@ -240,7 +254,7 @@ function parseSheetResponse(text){
   if(jsonp) text=jsonp[1];
   return JSON.parse(text);
 }
-async function refreshResults(){let q=$('#quickRefreshBtn'); if(q){q.className='quickRefresh loading';q.textContent='↻';} let url=localStorage.getItem(LS.url); if(!url){setStatus('Error: falta URL Apps Script.'); if(q){q.className='quickRefresh err';q.textContent='Error';} return} setStatus('Actualizando…'); try{let txt=await fetch(url,{cache:'no-store'}).then(r=>r.text()); let raw=parseSheetResponse(txt); let rows=Array.isArray(raw)?raw:(raw.results||raw.data||raw.values||[]); let next={}; for(const row of rows){let code=normCode(row.Partido??row.partido??row.codigo??row.Codigo??row[0]); let a=Number(row['Goles A']??row.golesA??row.goles_a??row.a??row.A??row[1]); let b=Number(row['Goles B']??row.golesB??row.goles_b??row.b??row.B??row[2]); if(code&&Number.isFinite(a)&&Number.isFinite(b))next[code]={a,b}; } results=next; localStorage.setItem(LS.results,JSON.stringify(results)); let stamp=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); setStatus(`Actualizado a las ${stamp}. Resultados cargados: ${Object.keys(results).length}`); if(q){q.className='quickRefresh ok';q.textContent='✓'; setTimeout(()=>{q.className='quickRefresh';q.textContent='↻ Actualizar';},1600);} renderAll(); }catch(e){console.error(e); if(q){q.className='quickRefresh err';q.textContent='Error'; setTimeout(()=>{q.className='quickRefresh';q.textContent='↻ Actualizar';},2200);} setStatus('Error al conectar o leer resultados. Revisa que el Apps Script devuelva JSON/JSONP válido.');}}
+async function refreshResults(){let q=$('#quickRefreshBtn'); if(q){q.className='quickRefresh loading';q.textContent='↻';} let url=localStorage.getItem(LS.url); if(!url){setStatus('Error: falta URL Apps Script.'); if(q){q.className='quickRefresh err';q.textContent='!';} return} setStatus('Actualizando…'); try{let txt=await fetch(url,{cache:'no-store'}).then(r=>r.text()); let raw=parseSheetResponse(txt); let rows=Array.isArray(raw)?raw:(raw.results||raw.data||raw.values||[]); let next={}; for(const row of rows){let code=normCode(row.Partido??row.partido??row.codigo??row.Codigo??row[0]); let a=Number(row['Goles A']??row.golesA??row.goles_a??row.a??row.A??row[1]); let b=Number(row['Goles B']??row.golesB??row.goles_b??row.b??row.B??row[2]); if(code&&Number.isFinite(a)&&Number.isFinite(b))next[code]={a,b}; } results=next; localStorage.setItem(LS.results,JSON.stringify(results)); let stamp=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); setStatus(`Actualizado a las ${stamp}. Resultados cargados: ${Object.keys(results).length}`); if(q){q.className='quickRefresh ok';q.textContent='✓'; setTimeout(()=>{q.className='quickRefresh';q.textContent='↻';},1600);} renderAll(); }catch(e){console.error(e); if(q){q.className='quickRefresh err';q.textContent='!'; setTimeout(()=>{q.className='quickRefresh';q.textContent='↻';},2200);} setStatus('Error al conectar o leer resultados. Revisa que el Apps Script devuelva JSON/JSONP válido.');}}
 function clearResults(){ if(!confirm('Esto borra sólo los resultados guardados en este móvil/navegador. No afecta al Google Sheet. ¿Continuar?'))return; results={}; localStorage.removeItem(LS.results); setStatus('Resultados locales borrados. Google Sheet intacto.'); renderAll();}
 function setStatus(t){$('#updateStatus').textContent=t; localStorage.setItem(LS.status,t)}
 init().catch(e=>{document.body.innerHTML='<pre>Error cargando la app: '+e.message+'</pre>'})
