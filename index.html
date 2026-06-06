@@ -65,46 +65,6 @@
     .tab{background:#fff;color:#506273;font-size:13px}.tab.active{background:var(--main2);color:var(--main);box-shadow:none}
     @media(max-width:520px){.banner{padding:10px 10px 14px}.bannerCompactTop{grid-template-columns:1fr;gap:5px}.bannerCompactTop .bannerInfo,.bannerCompactTop small{justify-self:center}.bannerTeams{gap:8px}.bannerTeamName{font-size:12px}.bannerCenterBox{min-width:108px;padding:8px 10px}.bannerCenterBox .time{font-size:24px}.bannerCenterBox .date,.bannerCenterBox .field{font-size:11px}.teams{gap:7px}.team{gap:6px;flex-direction:column;align-items:center;text-align:center}.team.right{align-items:center;text-align:center}.teamName{font-size:12px}.crest{width:34px;height:34px}.centerBox{min-width:88px;padding:6px 8px}.centerBox .time{font-size:18px}.centerBox .scoreText{font-size:18px}.centerBox .date,.centerBox .field{font-size:10px}.matchTop .phaseLabel,.matchTop .codeLabel{font-size:10px;padding:4px 7px}}
 
-
-
-    /* v1.4 tarjetas/banner con zona principal + metadatos lateral discreta */
-    .matchTop{display:none!important}
-    .matchLayout{display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:12px;align-items:center}
-    .matchMain{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:14px;align-items:center;justify-items:center;min-width:0}
-    .matchMain .team{justify-content:center;text-align:center;gap:10px;width:100%}
-    .matchMain .team.right{justify-content:center;text-align:center}
-    .matchMain .teamName{font-size:16px;font-weight:1000;line-height:1.15}
-    .metaSide{align-self:stretch;border-left:1px solid rgba(96,112,128,.18);padding-left:10px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:3px;color:#607080;font-size:11px;font-weight:500;line-height:1.15;text-transform:uppercase;letter-spacing:.01em}
-    .metaSide span{display:block}
-    .metaSide .metaPhase{color:#3d566b}
-    .metaSide .metaCode{color:#607080}
-    .centerBox{min-width:128px}
-    .banner{padding:12px 14px;border-radius:22px}
-    .bannerBody{display:grid;grid-template-columns:minmax(0,1fr) 122px;gap:12px;align-items:center}
-    .bannerMain{min-width:0;text-align:center}
-    .bannerTitle{font-size:14px;font-weight:1000;letter-spacing:.04em;margin:0 0 8px;color:#fff;text-transform:uppercase}
-    .bannerPlay{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px;align-items:center;justify-items:center;max-width:820px;margin:0 auto}
-    .bannerPlay .bannerTeamName{font-size:16px}
-    .bannerMetaSide{border-left-color:rgba(255,255,255,.24);color:rgba(255,255,255,.78);font-size:11px;align-items:flex-start;text-align:left;padding-left:12px}
-    .bannerMetaSide .metaPhase{color:rgba(255,255,255,.90)}
-    .bannerMetaSide .metaCode{color:rgba(255,255,255,.72)}
-    @media(max-width:520px){
-      .matchLayout{grid-template-columns:minmax(0,1fr) 72px;gap:6px}
-      .matchMain{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:5px}
-      .matchMain .teamName{font-size:12px}
-      .matchMain .team{gap:5px}
-      .metaSide{font-size:9px;padding-left:5px;gap:2px;letter-spacing:0}
-      .centerBox{min-width:82px;padding:6px 7px}
-      .centerBox .time{font-size:20px}.centerBox .scoreText{font-size:19px}
-      .bannerBody{grid-template-columns:minmax(0,1fr) 72px;gap:6px}
-      .bannerTitle{font-size:12px;margin-bottom:6px}
-      .bannerPlay{gap:6px}
-      .bannerPlay .bannerTeamName{font-size:11px}
-      .bannerMetaSide{font-size:9px;padding-left:6px}
-      .bannerCenterBox{min-width:96px;padding:7px 8px}
-      .bannerCenterBox .time{font-size:24px}
-    }
-
 </style>
 </head>
 <body>
@@ -162,15 +122,6 @@ function visiblePhaseLabel(m){
   return up(m.label||m.phase);
 }
 function visibleMatchLabel(m){return `${visiblePhaseLabel(m)} · PARTIDO ${m.id}`}
-function metaLines(m){
-  if(m.phase==='GRUPOS') return [`GRUPO ${m.group||''}`.trim(), `PARTIDO ${m.id}`];
-  let ph=m.phase==='SEMIS'?'SEMIS':m.phase;
-  if(m.bracket) return [ph, `PUESTOS ${m.bracket}`, `PARTIDO ${m.id}`];
-  return [up(m.label||m.phase), `PARTIDO ${m.id}`];
-}
-function metaSideHtml(m){
-  return `<div class="metaSide">${metaLines(m).map((x,i)=>`<span class="${i===0?'metaPhase':i===metaLines(m).length-1?'metaCode':'metaExtra'}">${x}</span>`).join('')}</div>`;
-}
 function isGroupComplete(g){let gm=matches.filter(x=>x.phase==='GRUPOS'&&x.group===g); return gm.length>0 && gm.every(x=>hasResult(x.id));}
 function confirmedWinnerId(id, seen=new Set()){let m=matchById(id),r=results[id]; if(!m||!hasResult(id)||r.a===r.b)return null; let side=r.a>r.b?m.teamA:m.teamB; return resolveTeamConfirmed(side, seen);}
 function confirmedLoserId(id, seen=new Set()){let m=matchById(id),r=results[id]; if(!m||!hasResult(id)||r.a===r.b)return null; let side=r.a<r.b?m.teamA:m.teamB; return resolveTeamConfirmed(side, seen);}
@@ -183,7 +134,7 @@ function centerBox(m){
 }
 function matchCard(m){
   let a=displayRef(m.teamA).id, b=displayRef(m.teamB).id, cls=(isMain(a)||isMain(b))?' mainTeam':'';
-  return `<article class="card${cls}"><div class="matchLayout"><div class="matchMain">${teamBlock(m.teamA,'left')}<div class="score">${centerBox(m)}</div>${teamBlock(m.teamB,'right')}</div>${metaSideHtml(m)}</div></article>`;
+  return `<article class="card${cls}"><div class="matchTop"><span class="phaseLabel">${visiblePhaseLabel(m)}</span><span class="codeLabel">PARTIDO ${m.id}</span></div><div class="teams">${teamBlock(m.teamA,'left')}<div class="score">${centerBox(m)}</div>${teamBlock(m.teamB,'right')}</div></article>`;
 }
 function renderTeamMatches(){let id=$('#teamSelect').value||mainTeam(); let list=matches.filter(m=>resolveTeamConfirmed(m.teamA)===id||resolveTeamConfirmed(m.teamB)===id); $('#teamMatches').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos confirmados para este equipo todavía.</p>';}
 function refCouldBecome(ref,id){ if(ref.team)return ref.team===id; if(ref.groupRank)return groupTeams(ref.groupRank.group).includes(id); if(ref.winner||ref.loser){let m=matchById(ref.winner||ref.loser); return m&&(refCouldBecome(m.teamA,id)||refCouldBecome(m.teamB,id));} return false;}
@@ -198,7 +149,7 @@ function renderBanner(){
   let cls='banner', html='';
   if(!pending){
     let place=[...Array(24)].map((_,i)=>i+1).find(p=>finalTeam(p)===mt);
-    html=`<div class="bannerBody"><div class="bannerMain"><div class="bannerTitle">PARTICIPACIÓN FINALIZADA · ${up(shortTeamName(mt))}</div><div class="bannerCenterBox"><div class="date">PUESTO FINAL</div><div class="time">${place?place+'º':'—'}</div></div></div><div class="metaSide bannerMetaSide"><span class="metaPhase">FINAL</span><span class="metaCode">TORNEO</span></div></div>`;
+    html=`<div class="bannerCompactTop"><span class="bannerInfo">PARTICIPACIÓN FINALIZADA</span><small>${up(shortTeamName(mt))}</small><span class="bannerSpacer"></span></div><div class="bannerCenterBox"><div class="date">PUESTO FINAL</div><div class="time">${place?place+'º':'—'}</div></div>`;
   }else{
     let dt=dateTime(pending), diff=dt-now, mins=Math.floor(diff/60000); let mode=simMode;
     if(mode==='auto'){ if(diff<=0&&diff>-40*60000)mode='live'; else if(diff>0&&diff<60*60000)mode='urgent'; else mode='normal'; }
@@ -206,7 +157,7 @@ function renderBanner(){
     let a=displayRefConfirmed(pending.teamA), b=displayRefConfirmed(pending.teamB);
     let title=mode==='live'?`EN JUEGO ${up(shortTeamName(mt))}`:mode==='urgent'?`FALTAN ${Math.max(0,mins)} MIN · ${up(shortTeamName(mt))}`:`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`;
     let box=mode==='live'?`<div class="date">EN JUEGO</div><div class="time">${pending.time}</div><div class="field">${pending.field}</div>`:`<div class="date">${dayText(dt, now)}</div><div class="time">${pending.time}</div><div class="field">${pending.field}</div>`;
-    html=`<div class="bannerBody"><div class="bannerMain"><div class="bannerTitle">${title}</div><div class="bannerPlay"><div class="bannerTeam"><img class="crest big" src="${a.id?logo(teams[a.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(a.name)}</div></div><div class="bannerCenterBox">${box}</div><div class="bannerTeam"><img class="crest big" src="${b.id?logo(teams[b.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(b.name)}</div></div></div></div>${metaSideHtml(pending).replace('metaSide','metaSide bannerMetaSide')}</div>`;
+    html=`<div class="bannerCompactTop"><span class="bannerInfo">${visiblePhaseLabel(pending)} · PARTIDO ${pending.id}</span><small>${title}</small><span class="bannerSpacer"></span></div><div class="bannerTeams"><div class="bannerTeam"><img class="crest big" src="${a.id?logo(teams[a.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(a.name)}</div></div><div class="bannerCenterBox">${box}</div><div class="bannerTeam"><img class="crest big" src="${b.id?logo(teams[b.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(b.name)}</div></div></div>`;
   }
   $('#banner').className=cls; $('#banner').innerHTML=html;
 }
