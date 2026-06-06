@@ -1,0 +1,1657 @@
+{
+  "schemaVersion": "1.0",
+  "competition": {
+    "id": "infantil_masculino_clubes_2026_sabadell",
+    "name": "CAMPEONATO ESPAÑA INFANTIL MASCULINO CLUBES 2026",
+    "location": "SABADELL",
+    "startDate": "2026-06-25",
+    "endDate": "2026-06-28",
+    "source": "PDF provisional-2, 5-jun-26",
+    "ignored": "CAMPEONATO FEMENINO / texto verde"
+  },
+  "settings": {
+    "defaultMainTeam": "ENCINAS",
+    "appsScriptUrl": "https://script.google.com/macros/s/AKfycby83sNpniy4jZUmWWsZ2uUXg1zpU6xA7wFqHC1j8En1YrFRrFZe3KvT5uSkZ2vRK5XwbA/exec",
+    "logoBasePath": "logos/",
+    "genericLogo": "generic.png",
+    "visiblePhases": [
+      "GRUPOS",
+      "OCTAVOS",
+      "CUARTOS",
+      "SEMIS",
+      "FINALES"
+    ],
+    "days": [
+      "JUE",
+      "VIE",
+      "SÁB",
+      "DOM"
+    ]
+  },
+  "teams": [
+    {
+      "id": "BRAINS",
+      "name": "COLEGIO BRAINS",
+      "logo": "colegio_brains.png"
+    },
+    {
+      "id": "BARCELONETA",
+      "name": "C.N. ATLETIC-BARCELONETA",
+      "logo": "cn_atletic_barceloneta.png"
+    },
+    {
+      "id": "ASKARTZA",
+      "name": "C. ASKARTZA",
+      "logo": "askartza.png"
+    },
+    {
+      "id": "MALAGA",
+      "name": "C.D.W. MALAGA",
+      "logo": "cdw_malaga.png"
+    },
+    {
+      "id": "MORVEDRE",
+      "name": "C.N.A. MORVEDRE SAGUNTO",
+      "logo": "cna_morvedre_sagunto.png"
+    },
+    {
+      "id": "CABALLA",
+      "name": "C.N. CABALLA - CIUDAD DE CEUTA",
+      "logo": "cn_caballa.png"
+    },
+    {
+      "id": "HELIOS",
+      "name": "C.N. HELIOS",
+      "logo": "cn_helios.png"
+    },
+    {
+      "id": "LAS_PALMAS",
+      "name": "C.N. LAS PALMAS",
+      "logo": "cn_las_palmas.png"
+    },
+    {
+      "id": "SOLLER",
+      "name": "ESPORTS AQUATICS SOLLER WP",
+      "logo": "esports_aquatics_soller_wp.png"
+    },
+    {
+      "id": "NAVARRA",
+      "name": "C.D.W. NAVARRA",
+      "logo": "cdw_navarra.png"
+    },
+    {
+      "id": "CARTHAGO",
+      "name": "C.W. CARTHAGO",
+      "logo": "cw_carthago.png"
+    },
+    {
+      "id": "BARCELONA",
+      "name": "C.N. BARCELONA",
+      "logo": "cn_barcelona.png"
+    },
+    {
+      "id": "TENERIFE_ECHEYDE",
+      "name": "CAN TENERIFE ECHEYDE",
+      "logo": "can_tenerife_echeyde.png"
+    },
+    {
+      "id": "OLIVAR",
+      "name": "E.M. EL OLIVAR",
+      "logo": "em_el_olivar.png"
+    },
+    {
+      "id": "TURIA",
+      "name": "C.D.W. TURIA",
+      "logo": "cdw_turia.png"
+    },
+    {
+      "id": "ALGECIRAS",
+      "name": "C.W. ALGECIRAS",
+      "logo": "cw_algeciras.png"
+    },
+    {
+      "id": "LEIOA",
+      "name": "LEIOA WP",
+      "logo": "leioa_wp.png"
+    },
+    {
+      "id": "TRUDGEON_SESTAO",
+      "name": "CDW TRUDGEON SESTAO",
+      "logo": "cdw_trudgeon_sestao.png"
+    },
+    {
+      "id": "SABADELL",
+      "name": "C.N. SABADELL",
+      "logo": "cn_sabadell.png"
+    },
+    {
+      "id": "MEDITERRANI",
+      "name": "C.E. MEDITERRANI",
+      "logo": "ce_mediterrani.png"
+    },
+    {
+      "id": "ALCORCON",
+      "name": "C.N. CIUDAD DE ALCORCON",
+      "logo": "cn_ciudad_de_alcorcon.png"
+    },
+    {
+      "id": "ENCINAS",
+      "name": "C. ENCINAS DE BOADILLA",
+      "logo": "encinas.png"
+    },
+    {
+      "id": "CANOE",
+      "name": "REAL CANOE N.C.",
+      "logo": "real_canoe.png"
+    },
+    {
+      "id": "HORTA",
+      "name": "U.E. HORTA",
+      "logo": "ue_horta.png"
+    }
+  ],
+  "groups": [
+    {
+      "id": "A",
+      "teams": [
+        "BRAINS",
+        "ALGECIRAS",
+        "LEIOA"
+      ]
+    },
+    {
+      "id": "B",
+      "teams": [
+        "BARCELONETA",
+        "TURIA",
+        "TRUDGEON_SESTAO"
+      ]
+    },
+    {
+      "id": "C",
+      "teams": [
+        "ASKARTZA",
+        "OLIVAR",
+        "SABADELL"
+      ]
+    },
+    {
+      "id": "D",
+      "teams": [
+        "MALAGA",
+        "TENERIFE_ECHEYDE",
+        "MEDITERRANI"
+      ]
+    },
+    {
+      "id": "H",
+      "teams": [
+        "MORVEDRE",
+        "BARCELONA",
+        "ALCORCON"
+      ]
+    },
+    {
+      "id": "I",
+      "teams": [
+        "CABALLA",
+        "CARTHAGO",
+        "ENCINAS"
+      ]
+    },
+    {
+      "id": "J",
+      "teams": [
+        "HELIOS",
+        "NAVARRA",
+        "CANOE"
+      ]
+    },
+    {
+      "id": "K",
+      "teams": [
+        "LAS_PALMAS",
+        "SOLLER",
+        "HORTA"
+      ]
+    }
+  ],
+  "rankingRules": {
+    "win": 3,
+    "draw": 1,
+    "loss": 0,
+    "order": [
+      "points",
+      "goalDifference",
+      "goalsFor"
+    ]
+  },
+  "matches": [
+    {
+      "id": "G1",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "12:00",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "NAVARRA"
+      },
+      "teamB": {
+        "team": "CANOE"
+      },
+      "group": "J",
+      "label": "GRUPO J"
+    },
+    {
+      "id": "G2",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "12:00",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "SOLLER"
+      },
+      "teamB": {
+        "team": "HORTA"
+      },
+      "group": "K",
+      "label": "GRUPO K"
+    },
+    {
+      "id": "G3",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "12:50",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "BARCELONA"
+      },
+      "teamB": {
+        "team": "ALCORCON"
+      },
+      "group": "H",
+      "label": "GRUPO H"
+    },
+    {
+      "id": "G4",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "12:50",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "CARTHAGO"
+      },
+      "teamB": {
+        "team": "ENCINAS"
+      },
+      "group": "I",
+      "label": "GRUPO I"
+    },
+    {
+      "id": "G5",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "13:40",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "SABADELL"
+      },
+      "teamB": {
+        "team": "OLIVAR"
+      },
+      "group": "C",
+      "label": "GRUPO C"
+    },
+    {
+      "id": "G6",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "13:40",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "MALAGA"
+      },
+      "teamB": {
+        "team": "MEDITERRANI"
+      },
+      "group": "D",
+      "label": "GRUPO D"
+    },
+    {
+      "id": "G7",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "14:30",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "ALGECIRAS"
+      },
+      "teamB": {
+        "team": "LEIOA"
+      },
+      "group": "A",
+      "label": "GRUPO A"
+    },
+    {
+      "id": "G8",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "14:30",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "TURIA"
+      },
+      "teamB": {
+        "team": "TRUDGEON_SESTAO"
+      },
+      "group": "B",
+      "label": "GRUPO B"
+    },
+    {
+      "id": "G9",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "15:20",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "HELIOS"
+      },
+      "teamB": {
+        "team": "CANOE"
+      },
+      "group": "J",
+      "label": "GRUPO J"
+    },
+    {
+      "id": "G10",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "15:20",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "LAS_PALMAS"
+      },
+      "teamB": {
+        "team": "HORTA"
+      },
+      "group": "K",
+      "label": "GRUPO K"
+    },
+    {
+      "id": "G11",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "16:10",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "MORVEDRE"
+      },
+      "teamB": {
+        "team": "ALCORCON"
+      },
+      "group": "H",
+      "label": "GRUPO H"
+    },
+    {
+      "id": "G12",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "16:10",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "CABALLA"
+      },
+      "teamB": {
+        "team": "ENCINAS"
+      },
+      "group": "I",
+      "label": "GRUPO I"
+    },
+    {
+      "id": "G13",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "17:00",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "ASKARTZA"
+      },
+      "teamB": {
+        "team": "SABADELL"
+      },
+      "group": "C",
+      "label": "GRUPO C"
+    },
+    {
+      "id": "G14",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "17:00",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "TENERIFE_ECHEYDE"
+      },
+      "teamB": {
+        "team": "MEDITERRANI"
+      },
+      "group": "D",
+      "label": "GRUPO D"
+    },
+    {
+      "id": "G15",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "17:50",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "BRAINS"
+      },
+      "teamB": {
+        "team": "LEIOA"
+      },
+      "group": "A",
+      "label": "GRUPO A"
+    },
+    {
+      "id": "G16",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "17:50",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "BARCELONETA"
+      },
+      "teamB": {
+        "team": "TRUDGEON_SESTAO"
+      },
+      "group": "B",
+      "label": "GRUPO B"
+    },
+    {
+      "id": "G17",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "18:40",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "HELIOS"
+      },
+      "teamB": {
+        "team": "NAVARRA"
+      },
+      "group": "J",
+      "label": "GRUPO J"
+    },
+    {
+      "id": "G18",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "18:40",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "LAS_PALMAS"
+      },
+      "teamB": {
+        "team": "SOLLER"
+      },
+      "group": "K",
+      "label": "GRUPO K"
+    },
+    {
+      "id": "G19",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "19:20",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "MORVEDRE"
+      },
+      "teamB": {
+        "team": "BARCELONA"
+      },
+      "group": "H",
+      "label": "GRUPO H"
+    },
+    {
+      "id": "G20",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "19:20",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "CABALLA"
+      },
+      "teamB": {
+        "team": "CARTHAGO"
+      },
+      "group": "I",
+      "label": "GRUPO I"
+    },
+    {
+      "id": "G21",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "20:10",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "OLIVAR"
+      },
+      "teamB": {
+        "team": "ASKARTZA"
+      },
+      "group": "C",
+      "label": "GRUPO C"
+    },
+    {
+      "id": "G22",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "20:10",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "MALAGA"
+      },
+      "teamB": {
+        "team": "TENERIFE_ECHEYDE"
+      },
+      "group": "D",
+      "label": "GRUPO D"
+    },
+    {
+      "id": "G23",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "21:00",
+      "field": "Campo 1",
+      "teamA": {
+        "team": "BRAINS"
+      },
+      "teamB": {
+        "team": "ALGECIRAS"
+      },
+      "group": "A",
+      "label": "GRUPO A"
+    },
+    {
+      "id": "G24",
+      "phase": "GRUPOS",
+      "date": "2026-06-25",
+      "dayLabel": "JUE",
+      "time": "21:00",
+      "field": "Campo 2",
+      "teamA": {
+        "team": "BARCELONETA"
+      },
+      "teamB": {
+        "team": "TURIA"
+      },
+      "group": "B",
+      "label": "GRUPO B"
+    },
+    {
+      "id": "P1",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "09:30",
+      "field": "Campo 1",
+      "teamA": {
+        "groupRank": {
+          "group": "H",
+          "rank": 3
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "D",
+          "rank": 3
+        }
+      },
+      "bracket": "17-24",
+      "label": "OCTAVOS · 17-24"
+    },
+    {
+      "id": "P2",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "09:30",
+      "field": "Campo 2",
+      "teamA": {
+        "groupRank": {
+          "group": "I",
+          "rank": 3
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "C",
+          "rank": 3
+        }
+      },
+      "bracket": "17-24",
+      "label": "OCTAVOS · 17-24"
+    },
+    {
+      "id": "P3",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "10:20",
+      "field": "Campo 1",
+      "teamA": {
+        "groupRank": {
+          "group": "J",
+          "rank": 3
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "B",
+          "rank": 3
+        }
+      },
+      "bracket": "17-24",
+      "label": "OCTAVOS · 17-24"
+    },
+    {
+      "id": "P4",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "10:20",
+      "field": "Campo 2",
+      "teamA": {
+        "groupRank": {
+          "group": "K",
+          "rank": 3
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "A",
+          "rank": 3
+        }
+      },
+      "bracket": "17-24",
+      "label": "OCTAVOS · 17-24"
+    },
+    {
+      "id": "P5",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "14:30",
+      "field": "Campo 1",
+      "teamA": {
+        "groupRank": {
+          "group": "A",
+          "rank": 2
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "B",
+          "rank": 1
+        }
+      },
+      "bracket": "1-16",
+      "label": "OCTAVOS · 1-16"
+    },
+    {
+      "id": "P6",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "14:30",
+      "field": "Campo 2",
+      "teamA": {
+        "groupRank": {
+          "group": "B",
+          "rank": 2
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "A",
+          "rank": 1
+        }
+      },
+      "bracket": "1-16",
+      "label": "OCTAVOS · 1-16"
+    },
+    {
+      "id": "P7",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "15:20",
+      "field": "Campo 1",
+      "teamA": {
+        "groupRank": {
+          "group": "C",
+          "rank": 2
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "D",
+          "rank": 1
+        }
+      },
+      "bracket": "1-16",
+      "label": "OCTAVOS · 1-16"
+    },
+    {
+      "id": "P8",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "15:20",
+      "field": "Campo 2",
+      "teamA": {
+        "groupRank": {
+          "group": "D",
+          "rank": 2
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "C",
+          "rank": 1
+        }
+      },
+      "bracket": "1-16",
+      "label": "OCTAVOS · 1-16"
+    },
+    {
+      "id": "P9",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "16:10",
+      "field": "Campo 1",
+      "teamA": {
+        "groupRank": {
+          "group": "H",
+          "rank": 2
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "I",
+          "rank": 1
+        }
+      },
+      "bracket": "1-16",
+      "label": "OCTAVOS · 1-16"
+    },
+    {
+      "id": "P10",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "16:10",
+      "field": "Campo 2",
+      "teamA": {
+        "groupRank": {
+          "group": "I",
+          "rank": 2
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "H",
+          "rank": 1
+        }
+      },
+      "bracket": "1-16",
+      "label": "OCTAVOS · 1-16"
+    },
+    {
+      "id": "P11",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "17:00",
+      "field": "Campo 1",
+      "teamA": {
+        "groupRank": {
+          "group": "J",
+          "rank": 2
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "K",
+          "rank": 1
+        }
+      },
+      "bracket": "1-16",
+      "label": "OCTAVOS · 1-16"
+    },
+    {
+      "id": "P12",
+      "phase": "OCTAVOS",
+      "date": "2026-06-26",
+      "dayLabel": "VIE",
+      "time": "17:00",
+      "field": "Campo 2",
+      "teamA": {
+        "groupRank": {
+          "group": "K",
+          "rank": 2
+        }
+      },
+      "teamB": {
+        "groupRank": {
+          "group": "J",
+          "rank": 1
+        }
+      },
+      "bracket": "1-16",
+      "label": "OCTAVOS · 1-16"
+    },
+    {
+      "id": "C5",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "11:00",
+      "field": "Campo 1",
+      "teamA": {
+        "winner": "P9"
+      },
+      "teamB": {
+        "winner": "P8"
+      },
+      "bracket": "1-8",
+      "label": "CUARTOS · 1-8"
+    },
+    {
+      "id": "C8",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "11:00",
+      "field": "Campo 2",
+      "teamA": {
+        "winner": "P5"
+      },
+      "teamB": {
+        "winner": "P12"
+      },
+      "bracket": "1-8",
+      "label": "CUARTOS · 1-8"
+    },
+    {
+      "id": "C7",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "12:00",
+      "field": "Campo 1",
+      "teamA": {
+        "winner": "P6"
+      },
+      "teamB": {
+        "winner": "P11"
+      },
+      "bracket": "1-8",
+      "label": "CUARTOS · 1-8"
+    },
+    {
+      "id": "C6",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "12:00",
+      "field": "Campo 2",
+      "teamA": {
+        "winner": "P7"
+      },
+      "teamB": {
+        "winner": "P10"
+      },
+      "bracket": "1-8",
+      "label": "CUARTOS · 1-8"
+    },
+    {
+      "id": "C1",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "13:00",
+      "field": "Campo 1",
+      "teamA": {
+        "loser": "P9"
+      },
+      "teamB": {
+        "loser": "P8"
+      },
+      "bracket": "9-16",
+      "label": "CUARTOS · 9-16"
+    },
+    {
+      "id": "C2",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "13:00",
+      "field": "Campo 2",
+      "teamA": {
+        "loser": "P7"
+      },
+      "teamB": {
+        "loser": "P10"
+      },
+      "bracket": "9-16",
+      "label": "CUARTOS · 9-16"
+    },
+    {
+      "id": "C11",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "13:00",
+      "field": "Campo 3",
+      "teamA": {
+        "loser": "P4"
+      },
+      "teamB": {
+        "loser": "P3"
+      },
+      "bracket": "21-24",
+      "label": "CUARTOS · 21-24"
+    },
+    {
+      "id": "C3",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "14:00",
+      "field": "Campo 1",
+      "teamA": {
+        "loser": "P6"
+      },
+      "teamB": {
+        "loser": "P11"
+      },
+      "bracket": "9-16",
+      "label": "CUARTOS · 9-16"
+    },
+    {
+      "id": "C4",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "14:00",
+      "field": "Campo 2",
+      "teamA": {
+        "loser": "P5"
+      },
+      "teamB": {
+        "loser": "P12"
+      },
+      "bracket": "9-16",
+      "label": "CUARTOS · 9-16"
+    },
+    {
+      "id": "C12",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "14:00",
+      "field": "Campo 3",
+      "teamA": {
+        "loser": "P2"
+      },
+      "teamB": {
+        "loser": "P1"
+      },
+      "bracket": "21-24",
+      "label": "CUARTOS · 21-24"
+    },
+    {
+      "id": "C13",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "15:00",
+      "field": "Campo 3",
+      "teamA": {
+        "winner": "P4"
+      },
+      "teamB": {
+        "winner": "P3"
+      },
+      "bracket": "17-20",
+      "label": "CUARTOS · 17-20"
+    },
+    {
+      "id": "C14",
+      "phase": "CUARTOS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "16:00",
+      "field": "Campo 3",
+      "teamA": {
+        "winner": "P2"
+      },
+      "teamB": {
+        "winner": "P1"
+      },
+      "bracket": "17-20",
+      "label": "CUARTOS · 17-20"
+    },
+    {
+      "id": "S1",
+      "phase": "SEMIS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "17:00",
+      "field": "Campo 1",
+      "teamA": {
+        "winner": "C5"
+      },
+      "teamB": {
+        "winner": "C8"
+      },
+      "bracket": "1-4",
+      "label": "SEMIS · 1-4"
+    },
+    {
+      "id": "S3",
+      "phase": "SEMIS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "17:00",
+      "field": "Campo 2",
+      "teamA": {
+        "loser": "C5"
+      },
+      "teamB": {
+        "loser": "C8"
+      },
+      "bracket": "5-8",
+      "label": "SEMIS · 5-8"
+    },
+    {
+      "id": "S2",
+      "phase": "SEMIS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "18:00",
+      "field": "Campo 1",
+      "teamA": {
+        "winner": "C6"
+      },
+      "teamB": {
+        "winner": "C7"
+      },
+      "bracket": "1-4",
+      "label": "SEMIS · 1-4"
+    },
+    {
+      "id": "S4",
+      "phase": "SEMIS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "18:00",
+      "field": "Campo 2",
+      "teamA": {
+        "loser": "C6"
+      },
+      "teamB": {
+        "loser": "C7"
+      },
+      "bracket": "5-8",
+      "label": "SEMIS · 5-8"
+    },
+    {
+      "id": "S8",
+      "phase": "SEMIS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "19:00",
+      "field": "Campo 1",
+      "teamA": {
+        "loser": "C1"
+      },
+      "teamB": {
+        "loser": "C4"
+      },
+      "bracket": "13-16",
+      "label": "SEMIS · 13-16"
+    },
+    {
+      "id": "S7",
+      "phase": "SEMIS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "19:00",
+      "field": "Campo 2",
+      "teamA": {
+        "loser": "C2"
+      },
+      "teamB": {
+        "loser": "C3"
+      },
+      "bracket": "13-16",
+      "label": "SEMIS · 13-16"
+    },
+    {
+      "id": "S6",
+      "phase": "SEMIS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "20:00",
+      "field": "Campo 1",
+      "teamA": {
+        "winner": "C1"
+      },
+      "teamB": {
+        "winner": "C4"
+      },
+      "bracket": "9-12",
+      "label": "SEMIS · 9-12"
+    },
+    {
+      "id": "S5",
+      "phase": "SEMIS",
+      "date": "2026-06-27",
+      "dayLabel": "SÁB",
+      "time": "20:00",
+      "field": "Campo 2",
+      "teamA": {
+        "winner": "C2"
+      },
+      "teamB": {
+        "winner": "C3"
+      },
+      "bracket": "9-12",
+      "label": "SEMIS · 9-12"
+    },
+    {
+      "id": "F23",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "08:00",
+      "field": "Campo 3",
+      "teamA": {
+        "loser": "C12"
+      },
+      "teamB": {
+        "loser": "C11"
+      },
+      "bracket": "23-24",
+      "label": "PUESTOS 23-24",
+      "decides": [
+        {
+          "place": 23,
+          "side": "winner"
+        },
+        {
+          "place": 24,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F21",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "09:00",
+      "field": "Campo 3",
+      "teamA": {
+        "winner": "C12"
+      },
+      "teamB": {
+        "winner": "C11"
+      },
+      "bracket": "21-22",
+      "label": "PUESTOS 21-22",
+      "decides": [
+        {
+          "place": 21,
+          "side": "winner"
+        },
+        {
+          "place": 22,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F17",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "10:00",
+      "field": "Campo 1",
+      "teamA": {
+        "winner": "C13"
+      },
+      "teamB": {
+        "winner": "C14"
+      },
+      "bracket": "17-18",
+      "label": "PUESTOS 17-18",
+      "decides": [
+        {
+          "place": 17,
+          "side": "winner"
+        },
+        {
+          "place": 18,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F19",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "10:00",
+      "field": "Campo 2",
+      "teamA": {
+        "loser": "C13"
+      },
+      "teamB": {
+        "loser": "C14"
+      },
+      "bracket": "19-20",
+      "label": "PUESTOS 19-20",
+      "decides": [
+        {
+          "place": 19,
+          "side": "winner"
+        },
+        {
+          "place": 20,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F13",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "11:00",
+      "field": "Campo 1",
+      "teamA": {
+        "winner": "S8"
+      },
+      "teamB": {
+        "winner": "S7"
+      },
+      "bracket": "13-14",
+      "label": "PUESTOS 13-14",
+      "decides": [
+        {
+          "place": 13,
+          "side": "winner"
+        },
+        {
+          "place": 14,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F15",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "11:00",
+      "field": "Campo 2",
+      "teamA": {
+        "loser": "S8"
+      },
+      "teamB": {
+        "loser": "S7"
+      },
+      "bracket": "15-16",
+      "label": "PUESTOS 15-16",
+      "decides": [
+        {
+          "place": 15,
+          "side": "winner"
+        },
+        {
+          "place": 16,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F7",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "12:00",
+      "field": "Campo 1",
+      "teamA": {
+        "loser": "S3"
+      },
+      "teamB": {
+        "loser": "S4"
+      },
+      "bracket": "7-8",
+      "label": "PUESTOS 7-8",
+      "decides": [
+        {
+          "place": 7,
+          "side": "winner"
+        },
+        {
+          "place": 8,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "12:00",
+      "field": "Campo 2",
+      "teamA": {
+        "loser": "S5"
+      },
+      "teamB": {
+        "loser": "S6"
+      },
+      "bracket": "11-12",
+      "label": "PUESTOS 11-12",
+      "decides": [
+        {
+          "place": 11,
+          "side": "winner"
+        },
+        {
+          "place": 12,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F5",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "13:00",
+      "field": "Campo 1",
+      "teamA": {
+        "winner": "S3"
+      },
+      "teamB": {
+        "winner": "S4"
+      },
+      "bracket": "5-6",
+      "label": "PUESTOS 5-6",
+      "decides": [
+        {
+          "place": 5,
+          "side": "winner"
+        },
+        {
+          "place": 6,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F9",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "13:00",
+      "field": "Campo 2",
+      "teamA": {
+        "winner": "S5"
+      },
+      "teamB": {
+        "winner": "S6"
+      },
+      "bracket": "9-10",
+      "label": "PUESTOS 9-10",
+      "decides": [
+        {
+          "place": 9,
+          "side": "winner"
+        },
+        {
+          "place": 10,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F3",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "14:00",
+      "field": "Campo 1",
+      "teamA": {
+        "loser": "S1"
+      },
+      "teamB": {
+        "loser": "S2"
+      },
+      "bracket": "3-4",
+      "label": "PUESTOS 3-4",
+      "decides": [
+        {
+          "place": 3,
+          "side": "winner"
+        },
+        {
+          "place": 4,
+          "side": "loser"
+        }
+      ]
+    },
+    {
+      "id": "F1",
+      "phase": "FINALES",
+      "date": "2026-06-28",
+      "dayLabel": "DOM",
+      "time": "16:00",
+      "field": "Campo 1",
+      "teamA": {
+        "winner": "S1"
+      },
+      "teamB": {
+        "winner": "S2"
+      },
+      "bracket": "1-2",
+      "label": "PUESTOS 1-2",
+      "decides": [
+        {
+          "place": 1,
+          "side": "winner"
+        },
+        {
+          "place": 2,
+          "side": "loser"
+        }
+      ]
+    }
+  ],
+  "finalPlaces": [
+    {
+      "place": 1,
+      "source": {
+        "winner": "F1"
+      }
+    },
+    {
+      "place": 2,
+      "source": {
+        "loser": "F1"
+      }
+    },
+    {
+      "place": 3,
+      "source": {
+        "winner": "F3"
+      }
+    },
+    {
+      "place": 4,
+      "source": {
+        "loser": "F3"
+      }
+    },
+    {
+      "place": 5,
+      "source": {
+        "winner": "F5"
+      }
+    },
+    {
+      "place": 6,
+      "source": {
+        "loser": "F5"
+      }
+    },
+    {
+      "place": 7,
+      "source": {
+        "winner": "F7"
+      }
+    },
+    {
+      "place": 8,
+      "source": {
+        "loser": "F7"
+      }
+    },
+    {
+      "place": 9,
+      "source": {
+        "winner": "F9"
+      }
+    },
+    {
+      "place": 10,
+      "source": {
+        "loser": "F9"
+      }
+    },
+    {
+      "place": 11,
+      "source": {
+        "winner": "F11"
+      }
+    },
+    {
+      "place": 12,
+      "source": {
+        "loser": "F11"
+      }
+    },
+    {
+      "place": 13,
+      "source": {
+        "winner": "F13"
+      }
+    },
+    {
+      "place": 14,
+      "source": {
+        "loser": "F13"
+      }
+    },
+    {
+      "place": 15,
+      "source": {
+        "winner": "F15"
+      }
+    },
+    {
+      "place": 16,
+      "source": {
+        "loser": "F15"
+      }
+    },
+    {
+      "place": 17,
+      "source": {
+        "winner": "F17"
+      }
+    },
+    {
+      "place": 18,
+      "source": {
+        "loser": "F17"
+      }
+    },
+    {
+      "place": 19,
+      "source": {
+        "winner": "F19"
+      }
+    },
+    {
+      "place": 20,
+      "source": {
+        "loser": "F19"
+      }
+    },
+    {
+      "place": 21,
+      "source": {
+        "winner": "F21"
+      }
+    },
+    {
+      "place": 22,
+      "source": {
+        "loser": "F21"
+      }
+    },
+    {
+      "place": 23,
+      "source": {
+        "winner": "F23"
+      }
+    },
+    {
+      "place": 24,
+      "source": {
+        "loser": "F23"
+      }
+    }
+  ]
+}
