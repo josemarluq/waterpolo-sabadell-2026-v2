@@ -38,26 +38,56 @@
     @media(max-width:430px){.bannerTeams{gap:8px}.bannerTeamName{font-size:12px}.banner h2{font-size:17px}.pill.strong{font-size:13px}.matchTop{flex-direction:column}.score.pending{font-size:12px}.matchWhen{font-size:15px}}
 
 
-    /* v1.1b: banner compacto y tarjetas más legibles */
-    .banner{padding:12px 14px 13px;text-align:center}
-    .banner.hidden{display:none}
-    .banner small{display:block;font-size:12px;line-height:1.1;margin-bottom:6px}
+    /* v1.2 layout consistente: equipos + escudos + dato central */
+    :root{--main:#176b55;--main2:#e9f6f1;--blue:#176b55}
+    .banner{background:linear-gradient(135deg,#176b55,#0f3f34);padding:12px 14px 14px;text-align:center}
+    .banner small{display:block;font-size:12px;letter-spacing:.05em;margin-bottom:6px}
     .banner h2{display:none}
-    .bannerTeams{grid-template-columns:1fr minmax(96px,150px) 1fr;gap:10px;margin:6px auto 7px;align-items:center}
-    .bannerTeam{gap:5px}
-    .bannerTeamName{font-size:13px;line-height:1.12}
-    .bannerCenter{gap:2px;line-height:1.08;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:8px 7px;min-height:58px;justify-content:center}
-    .bannerDay{font-size:13px;font-weight:1000;letter-spacing:.02em}
-    .bannerTime{font-size:21px;font-weight:1000}
-    .bannerField{font-size:11px;font-weight:900;opacity:.92}
-    .bannerCornerMeta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px;font-size:11px;font-weight:900;opacity:.94;text-transform:uppercase}
-    .bannerCornerMeta span{background:rgba(255,255,255,.13);border-radius:999px;padding:5px 8px}
-    .bannerMainMeta,.bannerSubMeta{display:none}
-    .matchTop{display:grid;grid-template-columns:1fr auto;align-items:start;gap:8px;margin-bottom:7px}
-    .matchPhase{font-size:12px;color:var(--main);font-weight:1000;text-transform:uppercase}
-    .matchCode{font-size:12px;color:var(--muted);font-weight:1000;text-transform:uppercase;text-align:right}
-    .matchSchedule{grid-column:1 / -1;text-align:center;color:#2d4a3d;font-weight:1000;font-size:14px;background:var(--main2);border-radius:999px;padding:6px 9px;justify-self:center;max-width:100%}
-    @media(max-width:430px){.banner{padding:11px 10px 12px}.bannerTeams{grid-template-columns:1fr 112px 1fr;gap:6px}.bannerTeamName{font-size:11px}.bannerDay{font-size:12px}.bannerTime{font-size:19px}.bannerField{font-size:10px}.bannerCornerMeta{font-size:10px}.crest.big{width:42px;height:42px}.matchTop{gap:6px}.matchSchedule{font-size:13px;padding:5px 8px}.matchPhase,.matchCode{font-size:11px}}
+    .banner .matchHeader{color:rgba(255,255,255,.82);border:0;margin:0 auto 8px;max-width:760px;font-size:11px}
+    .banner .matchHeader span{color:rgba(255,255,255,.88)}
+    .matchHeader{display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.02em;text-transform:uppercase;margin-bottom:8px}
+    .matchHeader span{min-width:0}
+    .matchHeader span:last-child{text-align:right;white-space:nowrap}
+    .matchLine{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center}
+    .matchSide{display:flex;align-items:center;gap:8px;min-width:0}
+    .matchSide.left{justify-content:flex-end;text-align:right}
+    .matchSide.right{justify-content:flex-start;text-align:left}
+    .matchTeamName{font-weight:1000;font-size:14px;line-height:1.15;overflow-wrap:anywhere}
+    .matchCenter{text-align:center;min-width:72px;font-weight:1000;color:var(--main)}
+    .matchCenter .when{display:block;font-size:16px;line-height:1.05}
+    .matchCenter .field{display:block;font-size:11px;line-height:1.2;color:var(--muted);margin-top:3px;font-weight:900}
+    .matchCenter .result{display:block;font-size:20px;line-height:1.05;color:var(--text)}
+    .matchCenter .state{display:block;font-size:11px;line-height:1.1;color:var(--muted);margin-top:3px}
+    .banner .matchLine{max-width:760px;margin:0 auto}
+    .banner .matchTeamName{font-size:15px;color:#fff}
+    .banner .matchCenter{min-width:92px;color:#fff}
+    .banner .matchCenter .when{font-size:17px}
+    .banner .matchCenter .field{color:rgba(255,255,255,.86);font-size:12px}
+    .banner .matchCenter .result{color:#fff;font-size:22px}
+    .banner .matchCenter .state{color:rgba(255,255,255,.88)}
+    .banner .crest.big{width:48px;height:48px}
+    .card{padding:12px}
+    .card .teams{display:block;margin-top:0}
+    .matchTop{display:none}
+    .score.pending,.score{display:none}
+    .tabs{background:#fff;border-top:2px solid #d0d7de;box-shadow:0 -6px 22px rgba(21,32,43,.12)}
+    .tab{background:#fff;color:#506273;font-size:13px}
+    .tab.active{background:var(--main);color:#fff;box-shadow:0 5px 14px rgba(23,107,85,.18)}
+    .chip.active{background:var(--main);border-color:var(--main);color:white}
+    @media(max-width:430px){
+      .banner{padding:11px 10px 12px;border-radius:20px}
+      .banner small{font-size:11px;margin-bottom:5px}
+      .matchHeader{font-size:10px;margin-bottom:7px}
+      .matchLine{grid-template-columns:minmax(0,1fr) 78px minmax(0,1fr);gap:6px}
+      .matchTeamName{font-size:12px}
+      .banner .matchTeamName{font-size:12px}
+      .crest{width:34px;height:34px}
+      .banner .crest.big{width:42px;height:42px}
+      .matchCenter .when{font-size:14px}
+      .banner .matchCenter .when{font-size:14px}
+      .matchCenter .result{font-size:18px}
+      .banner .matchCenter .result{font-size:20px}
+    }
 
 </style>
 </head>
@@ -103,11 +133,10 @@ function loadSaved(){ try{results=JSON.parse(localStorage.getItem(LS.results)||'
 async function init(){ DATA=await fetch('campeonato.json',{cache:'no-store'}).then(r=>r.json()); teams=Object.fromEntries(DATA.teams.map(t=>[t.id,t])); matches=DATA.matches; loadSaved(); $('#appTitle').textContent=DATA.competition.name; $('#appSub').textContent=`${DATA.competition.location} · ${DATA.competition.startDate} a ${DATA.competition.endDate}`; if(!localStorage.getItem(LS.url))localStorage.setItem(LS.url,DATA.settings.appsScriptUrl); compute(); setupControls(); renderAll(); if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})} }
 function compute(){ ranks={}; for(const g of groupIds()){let rows=groupTeams(g).map(id=>({id,pj:0,pts:0,gf:0,gc:0,dg:0})); for(const m of matches.filter(x=>x.phase==='GRUPOS'&&x.group===g)){let r=results[m.id]; if(!hasResult(m.id))continue; let a=m.teamA.team,b=m.teamB.team,ra=rows.find(x=>x.id===a),rb=rows.find(x=>x.id===b); if(!ra||!rb)continue; ra.pj++;rb.pj++;ra.gf+=r.a;ra.gc+=r.b;rb.gf+=r.b;rb.gc+=r.a; if(r.a>r.b)ra.pts+=3; else if(r.a<r.b)rb.pts+=3; else{ra.pts++;rb.pts++} }
  rows.forEach(x=>x.dg=x.gf-x.gc); rows.sort((a,b)=>b.pts-a.pts||b.dg-a.dg||b.gf-a.gf||teamName(a.id).localeCompare(teamName(b.id),'es')); ranks[g]=rows; } }
-function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); updateBannerVisibility(); if(b.dataset.tab==='search')renderTeamMatches(); }); $('#openAdmin').onclick=()=>$('#admin').classList.add('open'); $('#closeAdmin').onclick=()=>$('#admin').classList.remove('open'); $('#urlInput').value=localStorage.getItem(LS.url)||''; $('#saveUrl').onclick=()=>{localStorage.setItem(LS.url,$('#urlInput').value.trim()); setStatus('URL guardada.');}; const opts=DATA.teams.slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(t=>`<option value="${t.id}">${up(t.name)}</option>`).join(''); $('#teamSelect').innerHTML=opts; $('#mainTeamSelect').innerHTML=opts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; $('#refreshBtn').onclick=refreshResults; $('#clearBtn').onclick=clearResults; $$('[data-sim]').forEach(b=>b.onclick=()=>{simMode=b.dataset.sim; renderBanner();}); }
+function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); setBannerVisibility(); if(b.dataset.tab==='search')renderTeamMatches(); }); $('#openAdmin').onclick=()=>$('#admin').classList.add('open'); $('#closeAdmin').onclick=()=>$('#admin').classList.remove('open'); $('#urlInput').value=localStorage.getItem(LS.url)||''; $('#saveUrl').onclick=()=>{localStorage.setItem(LS.url,$('#urlInput').value.trim()); setStatus('URL guardada.');}; const opts=DATA.teams.slice().sort((a,b)=>a.name.localeCompare(b.name,'es')).map(t=>`<option value="${t.id}">${up(t.name)}</option>`).join(''); $('#teamSelect').innerHTML=opts; $('#mainTeamSelect').innerHTML=opts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; $('#refreshBtn').onclick=refreshResults; $('#clearBtn').onclick=clearResults; $$('[data-sim]').forEach(b=>b.onclick=()=>{simMode=b.dataset.sim; renderBanner();}); }
 function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visiblePhases; $('#dayFilters').innerHTML=days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join(''); $('#phaseFilters').innerHTML=phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join(''); $$('[data-day]').forEach(b=>{let d=b.dataset.day; b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||m.phase===activePhase)); b.onclick=()=>{activeDay=activeDay===d?null:d; renderCalendar()}}); $$('[data-phase]').forEach(b=>{let p=b.dataset.phase; b.disabled=!matches.some(m=>m.phase===p&&(!activeDay||m.dayLabel===activeDay)); b.onclick=()=>{activePhase=activePhase===p?null:p; renderCalendar()}}); }
-function renderAll(){ compute(); filterButtons(); renderBanner(); updateBannerVisibility(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
-function activeTab(){let b=document.querySelector('.tab.active'); return b?b.dataset.tab:'calendar'}
-function updateBannerVisibility(){let el=$('#banner'); if(!el)return; el.classList.toggle('hidden', activeTab()!=='calendar');}
+function setBannerVisibility(){let b=$('#banner'); if(b)b.style.display=$('#calendar')?.classList.contains('active')?'':'none';}
+function renderAll(){ compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); setBannerVisibility(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
 function renderCalendar(){ filterButtons(); let list=matches.filter(m=>(!activeDay||m.dayLabel===activeDay)&&(!activePhase||m.phase===activePhase)); $('#calendarList').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con esos filtros.</p>'; }
 function teamBlock(ref, side){let d=displayRef(ref), t=teams[d.id]; return `<div class="team ${side==='right'?'right':''}"><img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="teamName">${up(d.name)}</div></div>`}
@@ -118,16 +147,19 @@ function confirmedWinnerId(id, seen=new Set()){let m=matchById(id),r=results[id]
 function confirmedLoserId(id, seen=new Set()){let m=matchById(id),r=results[id]; if(!m||!hasResult(id)||r.a===r.b)return null; let side=r.a<r.b?m.teamA:m.teamB; return resolveTeamConfirmed(side, seen);}
 function resolveTeamConfirmed(ref, seen=new Set()){ if(!ref)return null; if(ref.team)return ref.team; if(ref.groupRank){ if(!isGroupComplete(ref.groupRank.group))return null; let arr=ranks[ref.groupRank.group]||[]; return arr[ref.groupRank.rank-1]?.id||null; } let key=ref.winner||ref.loser; if(!key||seen.has(key))return null; seen.add(key); return ref.winner?confirmedWinnerId(key,seen):confirmedLoserId(key,seen);}
 function displayRefConfirmed(ref){let id=resolveTeamConfirmed(ref); return {id, name:id?teamName(id):refText(ref), resolved:!!id}}
-function matchCard(m){let r=results[m.id], a=displayRef(m.teamA).id, b=displayRef(m.teamB).id, cls=(isMain(a)||isMain(b))?' mainTeam':''; let mid=hasResult(m.id)?`${r.a} - ${r.b}`:`<span class="matchWhen">${m.time}</span><span class="matchField">${m.field}</span>`; let scoreCls=hasResult(m.id)?'score':'score pending'; return `<article class="card${cls}"><div class="matchTop"><span class="matchPhase">${visiblePhaseLabel(m)}</span><span class="matchCode">PARTIDO ${m.id}</span><span class="matchSchedule">${compactDateLabel(m)} · ${m.time} · ${m.field}</span></div><div class="teams">${teamBlock(m.teamA,'left')}<div class="${scoreCls}">${mid}</div>${teamBlock(m.teamB,'right')}</div></article>`}
+function matchHeaderHtml(m){return `<div class="matchHeader"><span>${visiblePhaseLabel(m)}</span><span>PARTIDO ${m.id}</span></div>`}
+function matchCenterHtml(m, mode){let r=results[m.id]; if(hasResult(m.id))return `<div class="matchCenter"><span class="result">${r.a} - ${r.b}</span><span class="state">FINAL</span></div>`; if(mode==='live')return `<div class="matchCenter"><span class="when">EN JUEGO</span><span class="field">${m.time} · ${m.field}</span></div>`; return `<div class="matchCenter"><span class="when">${dayText(dateTime(m), new Date())} · ${m.time}</span><span class="field">${m.field}</span></div>`}
+function matchLineHtml(m, centerHtml, big=false){let a=displayRef(m.teamA), b=displayRef(m.teamB); let ca=a.id?logo(teams[a.id]):'logos/'+DATA.settings.genericLogo, cb=b.id?logo(teams[b.id]):'logos/'+DATA.settings.genericLogo; let crestCls=big?'crest big':'crest'; return `<div class="matchLine"><div class="matchSide left"><div class="matchTeamName">${up(a.name)}</div><img class="${crestCls}" src="${ca}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"></div>${centerHtml}<div class="matchSide right"><img class="${crestCls}" src="${cb}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="matchTeamName">${up(b.name)}</div></div></div>`}
+function matchCard(m){let a=displayRef(m.teamA).id, b=displayRef(m.teamB).id, cls=(isMain(a)||isMain(b))?' mainTeam':''; return `<article class="card${cls}">${matchHeaderHtml(m)}${matchLineHtml(m, matchCenterHtml(m), false)}</article>`}
 function renderTeamMatches(){let id=$('#teamSelect').value||mainTeam(); let list=matches.filter(m=>resolveTeamConfirmed(m.teamA)===id||resolveTeamConfirmed(m.teamB)===id); $('#teamMatches').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos confirmados para este equipo todavía.</p>';}
 function refCouldBecome(ref,id){ if(ref.team)return ref.team===id; if(ref.groupRank)return groupTeams(ref.groupRank.group).includes(id); if(ref.winner||ref.loser){let m=matchById(ref.winner||ref.loser); return m&&(refCouldBecome(m.teamA,id)||refCouldBecome(m.teamB,id));} return false;}
 function renderGroups(){ $('#groupsBox').innerHTML=groupIds().map(g=>`<div class="card"><h3>GRUPO ${g}</h3><table class="table"><thead><tr><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>PJ</th></tr></thead><tbody>${(ranks[g]||[]).map(x=>`<tr class="${isMain(x.id)?'mainTeam':''}"><td>${up(teamName(x.id))}</td><td>${x.pts}</td><td>${x.dg}</td><td>${x.gf}</td><td>${x.pj}</td></tr>`).join('')}</tbody></table></div>`).join(''); }
 function finalTeam(place){let fp=(DATA.finalPlaces||[]).find(x=>x.place===place);return fp?resolveTeam(fp.source):null}
 function renderFinals(){let html=''; for(let i=1;i<=24;i++){let id=finalTeam(i), t=teams[id]; html+=`<div class="place ${isMain(id)?'mainTeam':''}"><span class="placeNum">${i}º</span><img class="crest" src="${id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><span>${id?up(teamName(id)):'—'}</span></div>`} $('#placesBox').innerHTML=html; }
-function shortTeamName(id){let n=teamName(id); return n.replace(/^C\.\s*/,'').replace(/^C\.N\.\s*/,'').replace(/^REAL\s+/,'').split(' ')[0]||n;}
-function renderBanner(){let mt=mainTeam(), now=new Date(), team=teams[mt], relevant=matches.filter(m=>resolveTeamConfirmed(m.teamA)===mt||resolveTeamConfirmed(m.teamB)===mt).sort((a,b)=>dateTime(a)-dateTime(b)); let pending=relevant.find(m=>!hasResult(m.id)); let cls='banner', label=`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`, h='', body=''; if(!pending){let place=[...Array(24)].map((_,i)=>i+1).find(p=>finalTeam(p)===mt); h='PARTICIPACIÓN FINALIZADA'; body=`<div class="bannerMeta"><span class="pill strong">${place?'Puesto final: '+place+'º':'Puesto final: —'}</span></div>`}else{let dt=dateTime(pending), diff=dt-now, mins=Math.floor(diff/60000); let mode=simMode; if(mode==='auto'){ if(diff<=0&&diff>-40*60000)mode='live'; else if(diff>0&&diff<60*60000)mode='urgent'; else mode='normal'; } if(simMode!=='auto')cls+=' test'; if(mode==='urgent')cls+=' urgent'; if(mode==='live')cls+=' live'; let a=displayRefConfirmed(pending.teamA), b=displayRefConfirmed(pending.teamB); let dateLabel=dayText(dt, now); label=mode==='live'?`EN JUEGO ${up(shortTeamName(mt))}`:mode==='urgent'?`FALTAN ${Math.max(0,mins)} MIN · ${up(shortTeamName(mt))}`:`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`; h=`${up(a.name)} - ${up(b.name)}`; let centerTop=mode==='live'?'EN JUEGO':dateLabel; body=`<div class="bannerTeams"><div class="bannerTeam"><img class="crest big" src="${a.id?logo(teams[a.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(a.name)}</div></div><div class="bannerCenter"><span class="bannerDay">${centerTop}</span><span class="bannerTime">${pending.time}</span><span class="bannerField">${pending.field}</span></div><div class="bannerTeam"><img class="crest big" src="${b.id?logo(teams[b.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(b.name)}</div></div></div><div class="bannerCornerMeta"><span>${visiblePhaseLabel(pending)}</span><span>PARTIDO ${pending.id}</span></div>`} $('#banner').className=cls; $('#banner').innerHTML=`<small>${label}</small><h2>${h}</h2>${body}`; updateBannerVisibility(); }
-function dayText(dt, now){let d0=new Date(now.getFullYear(),now.getMonth(),now.getDate()), d1=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()); let dd=Math.round((d1-d0)/86400000); if(dd===0)return 'HOY'; if(dd===1)return 'MAÑANA'; return dt.toLocaleDateString('es-ES',{weekday:'short',day:'numeric'}).replace('.', '').toUpperCase();}
-function compactDateLabel(m){return dayText(dateTime(m), new Date());}
+const SHORT_NAMES={BRAINS:'BRAINS',BARCELONETA:'BARCELONETA',ASKARTZA:'ASKARTZA',MALAGA:'MÁLAGA',MORVEDRE:'MORVEDRE',CABALLA:'CABALLA',HELIOS:'HELIOS',LAS_PALMAS:'LAS PALMAS',SOLLER:'SÓLLER',NAVARRA:'NAVARRA',CARTHAGO:'CARTHAGO',BARCELONA:'BARCELONA',TENERIFE_ECHEYDE:'ECHEYDE',OLIVAR:'OLIVAR',TURIA:'TURIA',ALGECIRAS:'ALGECIRAS',LEIOA:'LEIOA',TRUDGEON_SESTAO:'SESTAO',SABADELL:'SABADELL',MEDITERRANI:'MEDITERRANI',ALCORCON:'ALCORCÓN',HORTA:'HORTA',CANOE:'CANOE',ENCINAS:'ENCINAS'};
+function shortTeamName(id){return SHORT_NAMES[id]||teamName(id);}
+function renderBanner(){let mt=mainTeam(), now=new Date(), relevant=matches.filter(m=>resolveTeamConfirmed(m.teamA)===mt||resolveTeamConfirmed(m.teamB)===mt).sort((a,b)=>dateTime(a)-dateTime(b)); let pending=relevant.find(m=>!hasResult(m.id)); let cls='banner', label=`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`, body=''; if(!pending){let place=[...Array(24)].map((_,i)=>i+1).find(p=>finalTeam(p)===mt); label=`PARTICIPACIÓN FINALIZADA ${up(shortTeamName(mt))}`; body=`<div class="bannerMainMeta"><span class="pill strong">${place?'Puesto final: '+place+'º':'Puesto final: —'}</span></div>`}else{let dt=dateTime(pending), diff=dt-now, mins=Math.floor(diff/60000); let mode=simMode; if(mode==='auto'){ if(diff<=0&&diff>-40*60000)mode='live'; else if(diff>0&&diff<60*60000)mode='urgent'; else mode='normal'; } if(simMode!=='auto')cls+=' test'; if(mode==='urgent')cls+=' urgent'; if(mode==='live')cls+=' live'; label=mode==='live'?`EN JUEGO ${up(shortTeamName(mt))}`:mode==='urgent'?`FALTAN ${Math.max(0,mins)} MIN · ${up(shortTeamName(mt))}`:`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`; body=`${matchHeaderHtml(pending)}${matchLineHtml(pending, matchCenterHtml(pending, mode), true)}`;} $('#banner').className=cls; $('#banner').innerHTML=`<small>${label}</small>${body}`; setBannerVisibility();}
+function dayText(dt, now){let d0=new Date(now.getFullYear(),now.getMonth(),now.getDate()), d1=new Date(dt.getFullYear(),dt.getMonth(),dt.getDate()); let dd=Math.round((d1-d0)/86400000); if(dd===0)return 'HOY'; if(dd===1)return 'MAÑANA'; const dias=['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB']; return `${dias[dt.getDay()]} ${dt.getDate()}`;}
 function parseSheetResponse(text){
   text=String(text||'').trim();
   // El Apps Script actual devuelve JSONP: callback([...]);
