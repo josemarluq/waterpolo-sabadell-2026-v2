@@ -159,32 +159,47 @@
     .card.mainTeam{background:linear-gradient(90deg,#dff1e5,#ffffff 72%)!important;border:2px solid #0f5d2c!important;border-left:9px solid #0f5d2c!important}
 
 
-    /* v1.11: clasificación, pincelada España y admin avanzado cerrado */
+    /* v1.12: encabezado con icono SBD y pincelada real PNG */
+    .appLogo{
+      width:48px;
+      height:48px;
+      border-radius:13px;
+      object-fit:cover;
+      flex:0 0 auto;
+      box-shadow:0 3px 10px rgba(21,32,43,.13);
+    }
+    .top{align-items:center}
+    .title{min-width:0}
+    .title h1{font-size:16px!important;line-height:1.08!important}
+    .title p{font-size:12px!important}
     .banner{isolation:isolate;}
     .banner::after{
       content:"";
       position:absolute;
       left:50%;
-      top:54%;
-      width:250px;
-      height:34px;
-      transform:translate(-50%,-50%) rotate(-7deg);
-      background:linear-gradient(90deg, rgba(198,0,0,.72) 0 28%, rgba(255,205,0,.78) 28% 72%, rgba(198,0,0,.72) 72% 100%);
-      opacity:.18;
-      border-radius:999px;
-      filter:blur(.2px);
+      top:56%;
+      width:min(520px,72%);
+      height:118px;
+      transform:translate(-50%,-50%);
+      background:url('brush_spain.png') center/contain no-repeat;
+      opacity:.82;
       z-index:0;
       pointer-events:none;
     }
     .bannerCompactTop,.bannerTeams{position:relative;z-index:1;}
     .bannerCenterBox{position:relative;z-index:2;}
-    @media(max-width:520px){.banner::after{width:190px;height:28px;top:56%;opacity:.16}}
+    @media(max-width:520px){
+      .appLogo{width:42px;height:42px;border-radius:12px}
+      .title h1{font-size:18px!important;line-height:1.05!important}
+      .title p{font-size:13px!important}
+      .banner::after{width:340px;height:88px;top:56%;opacity:.78}
+    }
 
 </style>
 </head>
 <body>
 <div class="app">
-  <header class="top"><div class="title"><h1 id="appTitle">Waterpolo</h1><p id="appSub">Cargando campeonato…</p></div><div class="headerActions"><button class="adminBtn" id="openAdmin" aria-label="Admin">⋯</button></div></header>
+  <header class="top"><img class="appLogo" src="icon-192.png" alt="SBD 2026"><div class="title"><h1 id="appTitle">Waterpolo</h1><p id="appSub">Cargando campeonato…</p></div><div class="headerActions"><button class="adminBtn" id="openAdmin" aria-label="Admin">⋯</button></div></header>
   <section id="banner" class="banner"><small>PRÓXIMO PARTIDO</small><h2>Cargando…</h2></section>
   <main>
     <section id="calendar" class="panel active"><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="calendarList"></div></section>
