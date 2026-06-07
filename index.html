@@ -310,8 +310,76 @@ function displayRef(ref){let id=resolveTeam(ref); return {id, name:id?teamName(i
 function dateTime(m){return new Date(`${m.date}T${m.time}:00`)}
 function loadSaved(){ try{results=JSON.parse(localStorage.getItem(LS.results)||'{}')}catch{results={}} }
 async function init(){ DATA=await fetch('campeonato.json',{cache:'no-store'}).then(r=>r.json()); teams=Object.fromEntries(DATA.teams.map(t=>[t.id,t])); matches=DATA.matches; loadSaved(); $('#appTitle').textContent='CAMPEONATO DE ESPAÑA INFANTIL MASCULINO 2026'; $('#appSub').textContent='SABADELL · 25-28 JUNIO 2026'; if(!localStorage.getItem(LS.url))localStorage.setItem(LS.url,DATA.settings.appsScriptUrl); compute(); setupControls(); renderAll(); if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})} }
-function compute(){ ranks={}; for(const g of groupIds()){let rows=groupTeams(g).map(id=>({id,pj:0,pts:0,gf:0,gc:0,dg:0})); for(const m of matches.filter(x=>x.phase==='GRUPOS'&&x.group===g)){let r=results[m.id]; if(!hasResult(m.id))continue; let a=m.teamA.team,b=m.teamB.team,ra=rows.find(x=>x.id===a),rb=rows.find(x=>x.id===b); if(!ra||!rb)continue; ra.pj++;rb.pj++;ra.gf+=r.a;ra.gc+=r.b;rb.gf+=r.b;rb.gc+=r.a; if(r.a>r.b)ra.pts+=3; else if(r.a<r.b)rb.pts+=3; else{ra.pts++;rb.pts++} }
- rows.forEach(x=>x.dg=x.gf-x.gc); rows.sort((a,b)=>b.pts-a.pts||b.dg-a.dg||b.gf-a.gf||teamName(a.id).localeCompare(teamName(b.id),'es')); ranks[g]=rows; } }
+function compute(){
+  ranks={};
+  for(const g of groupIds()){
+    const groupMatches=matches.filter(x=>x.phase==='GRUPOS'&&x.group===g);
+    let rows=groupTeams(g).map(id=>({id,pj:0,pts:0,gf:0,gc:0,dg:0}));
+    for(const m of groupMatches){
+      let r=results[m.id];
+      if(!hasResult(m.id))continue;
+      let a=m.teamA.team,b=m.teamB.team,ra=rows.find(x=>x.id===a),rb=rows.find(x=>x.id===b);
+      if(!ra||!rb)continue;
+      ra.pj++; rb.pj++;
+      ra.gf+=r.a; ra.gc+=r.b;
+      rb.gf+=r.b; rb.gc+=r.a;
+      if(r.a>r.b)ra.pts+=3;
+      else if(r.a<r.b)rb.pts+=3;
+      else{ra.pts++; rb.pts++;}
+    }
+    rows.forEach(x=>x.dg=x.gf-x.gc);
+    ranks[g]=sortGroupRowsRFEN(rows, groupMatches);
+  }
+}
+function miniTableStats(block, groupMatches){
+  const ids=new Set(block.map(x=>x.id));
+  const stats=Object.fromEntries(block.map(x=>[x.id,{id:x.id,pj:0,pts:0,gf:0,gc:0,dg:0}]));
+  for(const m of groupMatches){
+    const a=m.teamA.team,b=m.teamB.team;
+    if(!ids.has(a)||!ids.has(b)||!hasResult(m.id))continue;
+    const r=results[m.id], sa=stats[a], sb=stats[b];
+    sa.pj++; sb.pj++;
+    sa.gf+=r.a; sa.gc+=r.b;
+    sb.gf+=r.b; sb.gc+=r.a;
+    if(r.a>r.b)sa.pts+=3;
+    else if(r.a<r.b)sb.pts+=3;
+    else{sa.pts++; sb.pts++;}
+  }
+  Object.values(stats).forEach(x=>x.dg=x.gf-x.gc);
+  return stats;
+}
+function splitByCriterion(block, valueFn){
+  const sorted=block.slice().sort((a,b)=>valueFn(b)-valueFn(a));
+  const groups=[];
+  for(const row of sorted){
+    const v=valueFn(row);
+    const last=groups[groups.length-1];
+    if(last && last.value===v) last.items.push(row);
+    else groups.push({value:v,items:[row]});
+  }
+  return groups;
+}
+function sortTiedRowsRFEN(block, groupMatches, depth=0){
+  if(block.length<=1)return block;
+  if(depth>6)return block.slice().sort((a,b)=>teamName(a.id).localeCompare(teamName(b.id),'es'));
+  const mini=miniTableStats(block, groupMatches);
+  let groups=[{items:block.slice()}];
+  for(const key of ['pts','dg','gf']){
+    groups=groups.flatMap(gr=>gr.items.length<=1?[gr]:splitByCriterion(gr.items,row=>mini[row.id][key]));
+  }
+  if(groups.length>1){
+    return groups.flatMap(gr=>gr.items.length>1?sortTiedRowsRFEN(gr.items, groupMatches, depth+1):gr.items);
+  }
+  groups=[{items:block.slice()}];
+  for(const key of ['dg','gf']){
+    groups=groups.flatMap(gr=>gr.items.length<=1?[gr]:splitByCriterion(gr.items,row=>row[key]));
+  }
+  return groups.flatMap(gr=>gr.items.length>1?gr.items.slice().sort((a,b)=>teamName(a.id).localeCompare(teamName(b.id),'es')):gr.items);
+}
+function sortGroupRowsRFEN(rows, groupMatches){
+  const byPts=splitByCriterion(rows, row=>row.pts);
+  return byPts.flatMap(gr=>gr.items.length>1?sortTiedRowsRFEN(gr.items, groupMatches):gr.items);
+}
 function updateQuickRefreshVisibility(tab){
   const q=$('#quickRefreshBtn');
   if(!q)return;
