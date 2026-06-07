@@ -257,78 +257,6 @@
       .finishedPlace .time{font-size:24px;}
     }
 
-
-
-    /* v1.14: colores del equipo sólo para banner y resaltado del favorito; controles neutros */
-    .banner::after{display:none!important;background:none!important;}
-
-    /* Navegación y controles siempre neutros */
-    .refreshInline{
-      background:#ffffff!important;
-      color:#374151!important;
-      border-color:#d1d9e6!important;
-      box-shadow:0 4px 12px rgba(21,32,43,.07)!important;
-    }
-    .refreshInline.loading{background:#f3f4f6!important;color:#374151!important;border-color:#d1d5db!important;}
-    .refreshInline.ok{background:#ecfdf5!important;border-color:#86efac!important;color:#166534!important;}
-    .refreshInline.err{background:#fef2f2!important;border-color:#fecaca!important;color:#991b1b!important;}
-
-    .chip.active{
-      background:#e8eef6!important;
-      border-color:#cbd5e1!important;
-      color:#1f2937!important;
-    }
-    .tab.active{
-      background:#eef2f7!important;
-      color:#1f2937!important;
-      box-shadow:none!important;
-    }
-    .btn:not(.danger){
-      background:#edf2f7!important;
-      color:#1f2937!important;
-    }
-    .adminBtn,
-    .advancedBox summary,
-    select,
-    input{
-      color:#1f2937;
-    }
-
-    /* Información deportiva general neutra */
-    .matchTop .phaseLabel{
-      color:#536476!important;
-      background:#f3f6f9!important;
-      border:1px solid #e5eaf0!important;
-    }
-    .matchTop .codeLabel{
-      color:#536476!important;
-      background:#f3f6f9!important;
-      border:1px solid #e5eaf0!important;
-    }
-    .placeNum{color:#506273!important;}
-    .favoriteBox{
-      background:#f8fafc!important;
-      border-color:#dbe4ed!important;
-    }
-    .favoriteBox h3{color:#15202b!important;}
-
-    /* Mantener dinámico sólo lo que identifica al equipo favorito */
-    .banner:not(.urgent):not(.live){
-      background:linear-gradient(135deg,var(--club-main),var(--club-dark))!important;
-      color:var(--club-text)!important;
-    }
-    .card.mainTeam{
-      background:linear-gradient(90deg,var(--club-soft) 0%,#ffffff 74%)!important;
-      border:2px solid var(--club-dark)!important;
-      border-left:9px solid var(--club-dark)!important;
-      box-shadow:0 8px 22px color-mix(in srgb, var(--club-main) 16%, transparent)!important;
-    }
-    .table tr.mainTeam,
-    .place.mainTeam{
-      background:var(--club-soft)!important;
-      border-color:var(--club-main)!important;
-    }
-
 </style>
 </head>
 <body>
@@ -384,7 +312,7 @@ function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visi
 function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
 function renderCalendar(){ filterButtons(); let list=matches.filter(m=>(!activeDay||m.dayLabel===activeDay)&&(!activePhase||m.phase===activePhase)); $('#calendarList').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con esos filtros.</p>'; }
-function teamBlock(ref, side){let d=displayRefConfirmed(ref), t=teams[d.id]; let img=`<img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}">`; let name=`<div class="teamName">${up(d.name)}</div>`; return `<div class="team ${side==='right'?'right':'left'}">${side==='right'?img+name:name+img}</div>`}
+function teamBlock(ref, side){let d=displayRef(ref), t=teams[d.id]; let img=`<img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}">`; let name=`<div class="teamName">${up(d.name)}</div>`; return `<div class="team ${side==='right'?'right':'left'}">${side==='right'?img+name:name+img}</div>`}
 function visiblePhaseLabel(m){
   if(m.phase==='GRUPOS')return `GRUPO ${m.group||''}`.trim();
   let ph=m.phase==='SEMIS'?'SEMIS':m.phase;
@@ -419,7 +347,7 @@ const TEAM_COLORS={
   "SOLLER":"#4AA3DF","NAVARRA":"#C62828","CARTHAGO":"#111111","BARCELONA":"#7A1F3D",
   "TENERIFE_ECHEYDE":"#00A6D6","OLIVAR":"#D32F2F","TURIA":"#1565C0","ALGECIRAS":"#003366",
   "LEIOA":"#003366","TRUDGEON_SESTAO":"#008A4E","SABADELL":"#003366","MEDITERRANI":"#0057A3",
-  "ALCORCON":"#1565C0","ENCINAS":"#237A35","CANOE":"#FFD700","HORTA":"#D32F2F"
+  "ALCORCON":"#1565C0","ENCINAS":"#556B2F","CANOE":"#FFD700","HORTA":"#D32F2F"
 };
 function shortTeamName(id){return SHORT_NAMES[id]||teamName(id)}
 function hexToRgb(hex){hex=String(hex||'').replace('#',''); if(hex.length===3)hex=hex.split('').map(x=>x+x).join(''); let n=parseInt(hex,16); return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};}
@@ -436,7 +364,8 @@ function applyTeamTheme(){
   root.setProperty('--club-dark',dark);
   root.setProperty('--club-soft',soft);
   root.setProperty('--club-text',text);
-  // v1.14: el color del equipo sólo alimenta variables club, no la navegación general.
+  root.setProperty('--main',color);
+  root.setProperty('--main2',soft);
 }
 function renderBanner(){
   let mt=mainTeam(), now=new Date(), relevant=matches.filter(m=>resolveTeamConfirmed(m.teamA)===mt||resolveTeamConfirmed(m.teamB)===mt).sort((a,b)=>dateTime(a)-dateTime(b));
