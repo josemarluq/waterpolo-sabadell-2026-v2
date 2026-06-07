@@ -226,15 +226,23 @@
       border-left:9px solid var(--club-dark)!important;
       box-shadow:0 8px 22px color-mix(in srgb, var(--club-main) 16%, transparent)!important;
     }
-    .table tr.mainTeam,
-    .place.mainTeam{
-      background:var(--club-soft)!important;
-      border-color:var(--club-main)!important;
+    /* v1.15: el color del equipo sólo afecta al banner y a los partidos del favorito.
+       Controles, filtros, pestañas, admin y ordinales permanecen neutros. */
+    .refreshInline{
+      background:#fff!important;
+      color:#374151!important;
+      border-color:var(--line)!important;
     }
-    .placeNum,.favoriteBox h3,.refreshInline,.chip.active{color:var(--club-main)}
-    .chip.active{background:var(--club-main)!important;border-color:var(--club-main)!important;color:#fff!important}
-    .favoriteBox{background:var(--club-soft)!important;border-color:color-mix(in srgb, var(--club-main) 35%, #dbe4ed)!important}
-    .btn:not(.secondary):not(.danger){background:var(--club-main)!important;color:var(--club-text)!important}
+    .refreshInline.ok{background:#e9f7ef!important;border-color:#80c28c!important;color:#0f7b2f!important}
+    .refreshInline.err{background:#fdecec!important;border-color:#ef8a8a!important;color:#b42318!important}
+    .favoriteBox{background:#f8fafc!important;border-color:var(--line)!important}
+    .favoriteBox h3{color:#1f2937!important}
+    .btn:not(.danger){background:#edf2f7!important;color:#1f2937!important}
+    .chip.active{background:#237A35!important;border-color:#237A35!important;color:#fff!important}
+    .tab.active{background:#eaf6ee!important;color:#237A35!important}
+    .placeNum{color:#237A35!important}
+    .table tr.mainTeam{background:#eaf6ee!important}
+    .place.mainTeam{background:#eaf6ee!important;border-color:#237A35!important}
     .banner.finished{padding:13px 16px 16px!important;}
     .banner.finished::after{top:58%;opacity:.58;width:min(470px,72%);height:105px;}
     .finishedBanner{position:relative;z-index:1;display:grid;gap:11px;align-items:center;}
@@ -257,47 +265,8 @@
       .finishedPlace .time{font-size:24px;}
     }
 
-
-    /* v1.15 real sobre v1.13: colores acotados + controles neutros + cruces sólo confirmados */
-    .banner::after{display:none!important;background:none!important;}
-    .refreshInline{
-      background:#fff!important;
-      color:#374151!important;
-      border:1px solid var(--line)!important;
-      box-shadow:0 4px 12px rgba(21,32,43,.07)!important;
-    }
-    .refreshInline.loading{opacity:.75!important;color:#374151!important;}
-    .refreshInline.ok{background:#e9f7ef!important;border-color:#80c28c!important;color:#0f7b2f!important;}
-    .refreshInline.err{background:#fdecec!important;border-color:#ef8a8a!important;color:#b42318!important;}
-    .chip.active{
-      background:#eef3f8!important;
-      border-color:#cbd5e1!important;
-      color:#26364d!important;
-      box-shadow:none!important;
-    }
-    .tab.active{
-      background:#eef3f8!important;
-      color:#26364d!important;
-    }
-    .btn:not(.secondary):not(.danger){
-      background:#edf2f7!important;
-      color:#1f2937!important;
-    }
-    #saveUrl.btn{
-      background:#edf2f7!important;
-      color:#1f2937!important;
-    }
-    .favoriteBox h3{color:#26364d!important;}
-    .placeNum{color:#26364d!important;}
-    .matchTop .phaseLabel{
-      color:#26364d!important;
-      background:#eef3f8!important;
-    }
-    .matchTop .codeLabel{
-      color:#536476!important;
-      background:#f3f6f9!important;
-    }
-    .table th{color:#2b3b52!important;}
+    /* v1.15: sin pincelada en banner */
+    .banner::after{display:none!important;}
 
 </style>
 </head>
@@ -406,7 +375,7 @@ function applyTeamTheme(){
   root.setProperty('--club-dark',dark);
   root.setProperty('--club-soft',soft);
   root.setProperty('--club-text',text);
-  // v1.15: no tocamos --main/--main2 para que filtros, botones y navegación sigan neutros.
+  // --main y --main2 se dejan fijos para que filtros, pestañas y botones no cambien con el equipo.
 }
 function renderBanner(){
   let mt=mainTeam(), now=new Date(), relevant=matches.filter(m=>resolveTeamConfirmed(m.teamA)===mt||resolveTeamConfirmed(m.teamB)===mt).sort((a,b)=>dateTime(a)-dateTime(b));
