@@ -257,6 +257,48 @@
       .finishedPlace .time{font-size:24px;}
     }
 
+
+    /* v1.15 real sobre v1.13: colores acotados + controles neutros + cruces sólo confirmados */
+    .banner::after{display:none!important;background:none!important;}
+    .refreshInline{
+      background:#fff!important;
+      color:#374151!important;
+      border:1px solid var(--line)!important;
+      box-shadow:0 4px 12px rgba(21,32,43,.07)!important;
+    }
+    .refreshInline.loading{opacity:.75!important;color:#374151!important;}
+    .refreshInline.ok{background:#e9f7ef!important;border-color:#80c28c!important;color:#0f7b2f!important;}
+    .refreshInline.err{background:#fdecec!important;border-color:#ef8a8a!important;color:#b42318!important;}
+    .chip.active{
+      background:#eef3f8!important;
+      border-color:#cbd5e1!important;
+      color:#26364d!important;
+      box-shadow:none!important;
+    }
+    .tab.active{
+      background:#eef3f8!important;
+      color:#26364d!important;
+    }
+    .btn:not(.secondary):not(.danger){
+      background:#edf2f7!important;
+      color:#1f2937!important;
+    }
+    #saveUrl.btn{
+      background:#edf2f7!important;
+      color:#1f2937!important;
+    }
+    .favoriteBox h3{color:#26364d!important;}
+    .placeNum{color:#26364d!important;}
+    .matchTop .phaseLabel{
+      color:#26364d!important;
+      background:#eef3f8!important;
+    }
+    .matchTop .codeLabel{
+      color:#536476!important;
+      background:#f3f6f9!important;
+    }
+    .table th{color:#2b3b52!important;}
+
 </style>
 </head>
 <body>
@@ -312,7 +354,7 @@ function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visi
 function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
 function renderCalendar(){ filterButtons(); let list=matches.filter(m=>(!activeDay||m.dayLabel===activeDay)&&(!activePhase||m.phase===activePhase)); $('#calendarList').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con esos filtros.</p>'; }
-function teamBlock(ref, side){let d=displayRef(ref), t=teams[d.id]; let img=`<img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}">`; let name=`<div class="teamName">${up(d.name)}</div>`; return `<div class="team ${side==='right'?'right':'left'}">${side==='right'?img+name:name+img}</div>`}
+function teamBlock(ref, side){let d=displayRefConfirmed(ref), t=teams[d.id]; let img=`<img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}">`; let name=`<div class="teamName">${up(d.name)}</div>`; return `<div class="team ${side==='right'?'right':'left'}">${side==='right'?img+name:name+img}</div>`}
 function visiblePhaseLabel(m){
   if(m.phase==='GRUPOS')return `GRUPO ${m.group||''}`.trim();
   let ph=m.phase==='SEMIS'?'SEMIS':m.phase;
@@ -332,13 +374,13 @@ function centerBox(m){
   return `<div class="centerBox"><div class="date">${dayText(dateTime(m), new Date())}</div><div class="time">${m.time}</div><div class="field">${m.field}</div></div>`;
 }
 function matchCard(m){
-  let a=displayRef(m.teamA).id, b=displayRef(m.teamB).id, cls=(isMain(a)||isMain(b))?' mainTeam':'';
+  let a=displayRefConfirmed(m.teamA).id, b=displayRefConfirmed(m.teamB).id, cls=(isMain(a)||isMain(b))?' mainTeam':'';
   return `<article class="card${cls}"><div class="matchTop"><span class="phaseLabel">${visiblePhaseLabel(m)}</span><span class="codeLabel">PARTIDO ${m.id}</span></div><div class="teams">${teamBlock(m.teamA,'left')}<div class="score">${centerBox(m)}</div>${teamBlock(m.teamB,'right')}</div></article>`;
 }
 function renderTeamMatches(){let id=$('#teamSelect').value||mainTeam(); let list=matches.filter(m=>resolveTeamConfirmed(m.teamA)===id||resolveTeamConfirmed(m.teamB)===id); $('#teamMatches').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos confirmados para este equipo todavía.</p>';}
 function refCouldBecome(ref,id){ if(ref.team)return ref.team===id; if(ref.groupRank)return groupTeams(ref.groupRank.group).includes(id); if(ref.winner||ref.loser){let m=matchById(ref.winner||ref.loser); return m&&(refCouldBecome(m.teamA,id)||refCouldBecome(m.teamB,id));} return false;}
 function renderGroups(){ $('#groupsBox').innerHTML=groupIds().map(g=>`<div class="card"><h3>GRUPO ${g}</h3><table class="table"><thead><tr><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>PJ</th></tr></thead><tbody>${(ranks[g]||[]).map(x=>`<tr class="${isMain(x.id)?'mainTeam':''}"><td>${up(teamName(x.id))}</td><td>${x.pts}</td><td>${x.dg}</td><td>${x.gf}</td><td>${x.pj}</td></tr>`).join('')}</tbody></table></div>`).join(''); }
-function finalTeam(place){let fp=(DATA.finalPlaces||[]).find(x=>x.place===place);return fp?resolveTeam(fp.source):null}
+function finalTeam(place){let fp=(DATA.finalPlaces||[]).find(x=>x.place===place);return fp?resolveTeamConfirmed(fp.source):null}
 function renderFinals(){let html=''; for(let i=1;i<=24;i++){let id=finalTeam(i), t=teams[id]; html+=`<div class="place ${isMain(id)?'mainTeam':''}"><span class="placeNum">${i}º</span><img class="crest" src="${id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><span>${id?up(teamName(id)):'—'}</span></div>`} $('#placesBox').innerHTML=html; }
 const SHORT_NAMES={"BRAINS": "BRAINS", "BARCELONETA": "BARCELONETA", "ASKARTZA": "ASKARTZA", "MALAGA": "MÁLAGA", "MORVEDRE": "MORVEDRE", "CABALLA": "CABALLA", "HELIOS": "HELIOS", "LAS_PALMAS": "LAS PALMAS", "SOLLER": "SÓLLER", "NAVARRA": "NAVARRA", "CARTHAGO": "CARTHAGO", "BARCELONA": "BARCELONA", "TENERIFE_ECHEYDE": "ECHEYDE", "OLIVAR": "OLIVAR", "TURIA": "TURIA", "ALGECIRAS": "ALGECIRAS", "LEIOA": "LEIOA", "TRUDGEON_SESTAO": "SESTAO", "SABADELL": "SABADELL", "MEDITERRANI": "MEDITERRANI", "ALCORCON": "ALCORCÓN", "HORTA": "HORTA", "CANOE": "CANOE", "ENCINAS": "ENCINAS"};
 const TEAM_COLORS={
@@ -347,7 +389,7 @@ const TEAM_COLORS={
   "SOLLER":"#4AA3DF","NAVARRA":"#C62828","CARTHAGO":"#111111","BARCELONA":"#7A1F3D",
   "TENERIFE_ECHEYDE":"#00A6D6","OLIVAR":"#D32F2F","TURIA":"#1565C0","ALGECIRAS":"#003366",
   "LEIOA":"#003366","TRUDGEON_SESTAO":"#008A4E","SABADELL":"#003366","MEDITERRANI":"#0057A3",
-  "ALCORCON":"#1565C0","ENCINAS":"#556B2F","CANOE":"#FFD700","HORTA":"#D32F2F"
+  "ALCORCON":"#1565C0","ENCINAS":"#237A35","CANOE":"#FFD700","HORTA":"#D32F2F"
 };
 function shortTeamName(id){return SHORT_NAMES[id]||teamName(id)}
 function hexToRgb(hex){hex=String(hex||'').replace('#',''); if(hex.length===3)hex=hex.split('').map(x=>x+x).join(''); let n=parseInt(hex,16); return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};}
@@ -364,8 +406,7 @@ function applyTeamTheme(){
   root.setProperty('--club-dark',dark);
   root.setProperty('--club-soft',soft);
   root.setProperty('--club-text',text);
-  root.setProperty('--main',color);
-  root.setProperty('--main2',soft);
+  // v1.15: no tocamos --main/--main2 para que filtros, botones y navegación sigan neutros.
 }
 function renderBanner(){
   let mt=mainTeam(), now=new Date(), relevant=matches.filter(m=>resolveTeamConfirmed(m.teamA)===mt||resolveTeamConfirmed(m.teamB)===mt).sort((a,b)=>dateTime(a)-dateTime(b));
