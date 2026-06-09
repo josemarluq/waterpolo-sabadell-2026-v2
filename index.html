@@ -272,6 +272,11 @@
     .centerBox .scoreText .penMedal{font-size:.72em;vertical-align:8%;margin:0 4px;color:#b42318}
     .centerBox .state.penalty{font-size:10px;line-height:1.15;color:#607080;text-transform:uppercase;font-weight:900;max-width:150px;margin:3px auto 0;letter-spacing:.02em}
 
+
+    /* v1.22: resaltado de favorito en grupos/clasificación con color del equipo */
+    .table tr.mainTeam{background:var(--club-soft)!important;}
+    .place.mainTeam{background:var(--club-soft)!important;border-color:var(--club-main)!important;}
+
 </style>
 </head>
 <body>
@@ -390,7 +395,7 @@ function updateQuickRefreshVisibility(tab){
   q.style.display=(tab==='calendar'||tab==='search'||tab==='groups')?'':'none';
 }
 
-function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); $('#banner').style.display=b.dataset.tab==='calendar'?'':'none'; if(b.dataset.tab==='search')renderTeamMatches(); }); $('#banner').style.display=''; $('#openAdmin').onclick=()=>{ const adv=document.querySelector('.advancedBox'); if(adv) adv.removeAttribute('open'); $('#admin').classList.add('open'); }; $('#admin').addEventListener('click',e=>{if(e.target===$('#admin'))$('#admin').classList.remove('open');}); $('#closeAdmin').onclick=()=>$('#admin').classList.remove('open'); $('#urlInput').value=localStorage.getItem(LS.url)||''; $('#saveUrl').onclick=()=>{localStorage.setItem(LS.url,$('#urlInput').value.trim()); setStatus('URL guardada.');}; const opts=DATA.teams.slice().sort((a,b)=>shortTeamName(a.id).localeCompare(shortTeamName(b.id),'es')).map(t=>`<option value="${t.id}">${up(shortTeamName(t.id))}</option>`).join(''); $('#teamSelect').innerHTML=opts; $('#mainTeamSelect').innerHTML=opts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; if($('#clearBtn')) $('#clearBtn').onclick=clearResults; $$('[data-sim]').forEach(b=>b.onclick=()=>{simMode=b.dataset.sim; renderBanner();}); }
+function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); $('#banner').style.display=b.dataset.tab==='calendar'?'':'none'; if(b.dataset.tab==='search')renderTeamMatches(); }); $('#banner').style.display=''; $('#openAdmin').onclick=()=>{ const adv=document.querySelector('.advancedBox'); if(adv) adv.removeAttribute('open'); $('#admin').classList.add('open'); }; $('#admin').addEventListener('click',e=>{if(e.target===$('#admin'))$('#admin').classList.remove('open');}); $('#closeAdmin').onclick=()=>$('#admin').classList.remove('open'); $('#urlInput').value=localStorage.getItem(LS.url)||''; $('#saveUrl').onclick=()=>{localStorage.setItem(LS.url,$('#urlInput').value.trim()); setStatus('URL guardada.');}; const teamOpts=DATA.teams.slice().sort((a,b)=>shortTeamName(a.id).localeCompare(shortTeamName(b.id),'es')).map(t=>`<option value="${t.id}">${up(shortTeamName(t.id))}</option>`).join(''); const groupOpts=groupIds().map(g=>`<option value="GROUP_${g}">PARTIDOS GRUPO ${g}</option>`).join(''); $('#teamSelect').innerHTML=`<optgroup label="Equipos">${teamOpts}</optgroup><optgroup label="Grupos">${groupOpts}</optgroup>`; $('#mainTeamSelect').innerHTML=teamOpts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; if($('#clearBtn')) $('#clearBtn').onclick=clearResults; $$('[data-sim]').forEach(b=>b.onclick=()=>{simMode=b.dataset.sim; renderBanner();}); }
 function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visiblePhases; $('#dayFilters').classList.add('dayRow'); $('#dayFilters').innerHTML=`<div class="dayChips">${days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}</div><button class="refreshInline" id="dayRefreshBtn" type="button">↻ Actualizar</button>`; $('#phaseFilters').innerHTML=phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join(''); $$('[data-day]').forEach(b=>{let d=b.dataset.day; b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||m.phase===activePhase)); b.onclick=()=>{activeDay=activeDay===d?null:d; renderCalendar()}}); $$('[data-phase]').forEach(b=>{let p=b.dataset.phase; b.disabled=!matches.some(m=>m.phase===p&&(!activeDay||m.dayLabel===activeDay)); b.onclick=()=>{activePhase=activePhase===p?null:p; renderCalendar()}}); const rb=$('#dayRefreshBtn'); if(rb) rb.onclick=refreshResults; }
 function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
@@ -400,6 +405,10 @@ function teamBlock(ref, side){let d=displayRefConfirmed(ref), t=teams[d.id]; let
 function visiblePhaseLabel(m){
   if(m.phase==='GRUPOS')return `GRUPO ${m.group||''}`.trim();
   let ph=m.phase==='SEMIS'?'SEMIS':m.phase;
+  // En el cuadro de puestos 17-24 sólo hay 8 equipos: no son octavos.
+  // P1-P4 funcionan como CUARTOS, y C11-C14 como SEMIS.
+  if(m.phase==='OCTAVOS' && m.bracket==='17-24') ph='CUARTOS';
+  if(m.phase==='CUARTOS' && (m.bracket==='17-20'||m.bracket==='21-24')) ph='SEMIS';
   if(m.bracket)return `${ph} (PUESTOS ${m.bracket})`;
   return up(m.label||m.phase);
 }
@@ -427,7 +436,7 @@ function matchCard(m){
   let a=displayRefConfirmed(m.teamA).id, b=displayRefConfirmed(m.teamB).id, cls=(isMain(a)||isMain(b))?' mainTeam':'';
   return `<article class="card${cls}"><div class="matchTop"><span class="phaseLabel">${visiblePhaseLabel(m)}</span><span class="codeLabel">PARTIDO ${m.id}</span></div><div class="teams">${teamBlock(m.teamA,'left')}<div class="score">${centerBox(m)}</div>${teamBlock(m.teamB,'right')}</div></article>`;
 }
-function renderTeamMatches(){let id=$('#teamSelect').value||mainTeam(); let list=matches.filter(m=>resolveTeamConfirmed(m.teamA)===id||resolveTeamConfirmed(m.teamB)===id); $('#teamMatches').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos confirmados para este equipo todavía.</p>';}
+function renderTeamMatches(){let val=$('#teamSelect').value||mainTeam(); let list=[]; if(String(val).startsWith('GROUP_')){let g=String(val).replace('GROUP_',''); list=matches.filter(m=>m.phase==='GRUPOS'&&m.group===g);}else{let id=val; list=matches.filter(m=>resolveTeamConfirmed(m.teamA)===id||resolveTeamConfirmed(m.teamB)===id);} $('#teamMatches').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con ese filtro.</p>';}
 function refCouldBecome(ref,id){ if(ref.team)return ref.team===id; if(ref.groupRank)return groupTeams(ref.groupRank.group).includes(id); if(ref.winner||ref.loser){let m=matchById(ref.winner||ref.loser); return m&&(refCouldBecome(m.teamA,id)||refCouldBecome(m.teamB,id));} return false;}
 function renderGroups(){ $('#groupsBox').innerHTML=groupIds().map(g=>`<div class="card"><h3>GRUPO ${g}</h3><table class="table"><thead><tr><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>PJ</th></tr></thead><tbody>${(ranks[g]||[]).map(x=>`<tr class="${isMain(x.id)?'mainTeam':''}"><td>${up(teamName(x.id))}</td><td>${x.pts}</td><td>${x.dg}</td><td>${x.gf}</td><td>${x.pj}</td></tr>`).join('')}</tbody></table></div>`).join(''); }
 function finalTeam(place){let fp=(DATA.finalPlaces||[]).find(x=>x.place===place);return fp?resolveTeamConfirmed(fp.source):null}
