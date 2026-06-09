@@ -268,9 +268,9 @@
     /* v1.15: sin pincelada en banner */
     .banner::after{display:none!important;}
 
-    /* v1.20: indicador visual de penaltis */
-    .centerBox .scoreText .penMark{font-size:.8em;margin-left:1px;color:#b42318}
-    .centerBox .state.penalty{font-size:10px;line-height:1.15;color:#b42318;text-transform:none;font-weight:900;max-width:150px;margin:3px auto 0}
+    /* v1.21: penaltis compactos + nombres cortos en tarjetas */
+    .centerBox .scoreText .penMedal{font-size:.72em;vertical-align:8%;margin:0 4px;color:#b42318}
+    .centerBox .state.penalty{font-size:10px;line-height:1.15;color:#607080;text-transform:uppercase;font-weight:900;max-width:150px;margin:3px auto 0;letter-spacing:.02em}
 
 </style>
 </head>
@@ -395,7 +395,8 @@ function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visi
 function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
 function renderCalendar(){ filterButtons(); let list=matches.filter(m=>(!activeDay||m.dayLabel===activeDay)&&(!activePhase||m.phase===activePhase)); $('#calendarList').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con esos filtros.</p>'; }
-function teamBlock(ref, side){let d=displayRefConfirmed(ref), t=teams[d.id]; let img=`<img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}">`; let name=`<div class="teamName">${up(d.name)}</div>`; return `<div class="team ${side==='right'?'right':'left'}">${side==='right'?img+name:name+img}</div>`}
+function displayNameShort(d){return d.id?shortTeamName(d.id):d.name}
+function teamBlock(ref, side){let d=displayRefConfirmed(ref), t=teams[d.id]; let img=`<img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}">`; let name=`<div class="teamName">${up(displayNameShort(d))}</div>`; return `<div class="team ${side==='right'?'right':'left'}">${side==='right'?img+name:name+img}</div>`}
 function visiblePhaseLabel(m){
   if(m.phase==='GRUPOS')return `GRUPO ${m.group||''}`.trim();
   let ph=m.phase==='SEMIS'?'SEMIS':m.phase;
@@ -414,7 +415,9 @@ function centerBox(m){
   if(hasResult(m.id)){
     let p=penaltySide(m.id), winId=confirmedWinnerId(m.id);
     if(r.a===r.b && p && winId){
-      return `<div class="centerBox"><div class="scoreText">${r.a} - ${r.b}<span class="penMark">*</span></div><div class="state penalty">* ${up(shortTeamName(winId))} ganó en penaltis</div></div>`;
+      let medal='<span class="penMedal">🏅</span>';
+      let score=p==='A'?`${medal}${r.a} - ${r.b}`:`${r.a} - ${r.b}${medal}`;
+      return `<div class="centerBox"><div class="scoreText">${score}</div><div class="state penalty">Penaltis</div></div>`;
     }
     return `<div class="centerBox"><div class="scoreText">${r.a} - ${r.b}</div><div class="state">Final</div></div>`;
   }
@@ -462,7 +465,7 @@ function renderBanner(){
   if(!pending){
     let place=[...Array(24)].map((_,i)=>i+1).find(p=>finalTeam(p)===mt);
     let t=teams[mt]; cls+=' finished';
-    html=`<div class="finishedBanner"><div class="finishedTitle">CAMPEONATO DE ESPAÑA INFANTIL 2026 FINALIZADO</div><div class="finishedBody"><div class="finishedTeam"><img class="crest big" src="${t?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="finishedTeamName">${up(teamName(mt))}</div></div><div class="finishedPlace"><div class="date">PUESTO FINAL</div><div class="time">${place?place+'º':'—'}</div></div></div></div>`;
+    html=`<div class="finishedBanner"><div class="finishedTitle">CAMPEONATO DE ESPAÑA INFANTIL 2026 FINALIZADO</div><div class="finishedBody"><div class="finishedTeam"><img class="crest big" src="${t?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="finishedTeamName">${up(shortTeamName(mt))}</div></div><div class="finishedPlace"><div class="date">PUESTO FINAL</div><div class="time">${place?place+'º':'—'}</div></div></div></div>`;
   }else{
     let dt=dateTime(pending), diff=dt-now, mins=Math.floor(diff/60000); let mode=simMode;
     if(mode==='auto'){ if(diff<=0&&diff>-40*60000)mode='live'; else if(diff>0&&diff<60*60000)mode='urgent'; else mode='normal'; }
@@ -470,7 +473,7 @@ function renderBanner(){
     let a=displayRefConfirmed(pending.teamA), b=displayRefConfirmed(pending.teamB);
     let title=mode==='live'?`EN JUEGO ${up(shortTeamName(mt))}`:mode==='urgent'?`FALTAN ${Math.max(0,mins)} MIN · ${up(shortTeamName(mt))}`:`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`;
     let box=mode==='live'?`<div class="date">EN JUEGO</div><div class="time">${pending.time}</div><div class="field">${pending.field}</div>`:`<div class="date">${dayText(dt, now)}</div><div class="time">${pending.time}</div><div class="field">${pending.field}</div>`;
-    html=`<div class="bannerCompactTop"><span class="bannerInfo">${bannerPhaseLabel(pending)}</span><small>${title}</small><span class="bannerSpacer"></span></div><div class="bannerTeams"><div class="bannerTeam"><img class="crest big" src="${a.id?logo(teams[a.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(a.name)}</div></div><div class="bannerCenterBox">${box}</div><div class="bannerTeam"><img class="crest big" src="${b.id?logo(teams[b.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(b.name)}</div></div></div>`;
+    html=`<div class="bannerCompactTop"><span class="bannerInfo">${bannerPhaseLabel(pending)}</span><small>${title}</small><span class="bannerSpacer"></span></div><div class="bannerTeams"><div class="bannerTeam"><img class="crest big" src="${a.id?logo(teams[a.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(displayNameShort(a))}</div></div><div class="bannerCenterBox">${box}</div><div class="bannerTeam"><img class="crest big" src="${b.id?logo(teams[b.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(displayNameShort(b))}</div></div></div>`;
   }
   $('#banner').className=cls; $('#banner').innerHTML=html;
 }
