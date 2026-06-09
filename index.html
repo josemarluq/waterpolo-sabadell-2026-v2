@@ -268,6 +268,10 @@
     /* v1.15: sin pincelada en banner */
     .banner::after{display:none!important;}
 
+    /* v1.20: indicador visual de penaltis */
+    .centerBox .scoreText .penMark{font-size:.8em;margin-left:1px;color:#b42318}
+    .centerBox .state.penalty{font-size:10px;line-height:1.15;color:#b42318;text-transform:none;font-weight:900;max-width:150px;margin:3px auto 0}
+
 </style>
 </head>
 <body>
@@ -302,8 +306,12 @@ function mainTeam(){return localStorage.getItem(LS.main)||DATA.settings.defaultM
 function isMain(id){return id && id===mainTeam()}
 function matchById(id){return matches.find(m=>m.id===id)}
 function hasResult(id){let r=results[id];return r&&Number.isFinite(r.a)&&Number.isFinite(r.b)}
-function winnerId(id){let m=matchById(id),r=results[id]; if(!m||!hasResult(id)||r.a===r.b)return null; return resolveTeam(r.a>r.b?m.teamA:m.teamB)}
-function loserId(id){let m=matchById(id),r=results[id]; if(!m||!hasResult(id)||r.a===r.b)return null; return resolveTeam(r.a<r.b?m.teamA:m.teamB)}
+function penaltySide(id){let r=results[id];let p=String(r?.p||'').trim().toUpperCase();return (p==='A'||p==='B')?p:null}
+function resultWinnerSide(id){let r=results[id]; if(!hasResult(id))return null; if(r.a>r.b)return 'A'; if(r.b>r.a)return 'B'; return penaltySide(id)}
+function resultLoserSide(id){let s=resultWinnerSide(id); if(!s)return null; return s==='A'?'B':'A'}
+function winnerId(id){let m=matchById(id),side=resultWinnerSide(id); if(!m||!side)return null; return resolveTeam(side==='A'?m.teamA:m.teamB)}
+function loserId(id){let m=matchById(id),side=resultLoserSide(id); if(!m||!side)return null; return resolveTeam(side==='A'?m.teamA:m.teamB)}
+function applyPoints(ra,rb,r){ if(r.a>r.b)ra.pts+=3; else if(r.a<r.b)rb.pts+=3; else if(String(r.p||'').toUpperCase()==='A'){ra.pts+=2; rb.pts+=1;} else if(String(r.p||'').toUpperCase()==='B'){rb.pts+=2; ra.pts+=1;} else{ra.pts++; rb.pts++;} }
 function refText(ref){ if(ref.team)return teamName(ref.team); if(ref.winner)return `GANADOR ${ref.winner}`; if(ref.loser)return `PERDEDOR ${ref.loser}`; if(ref.groupRank)return `${ref.groupRank.rank}º GRUPO ${ref.groupRank.group}`; return '—'}
 function resolveTeam(ref, seen=new Set()){ if(!ref)return null; if(ref.team)return ref.team; if(ref.groupRank){let arr=ranks[ref.groupRank.group]||[];return arr[ref.groupRank.rank-1]?.id||null} let key=ref.winner||ref.loser; if(!key||seen.has(key))return null; seen.add(key); return ref.winner?winnerId(key):loserId(key)}
 function displayRef(ref){let id=resolveTeam(ref); return {id, name:id?teamName(id):refText(ref), resolved:!!id}}
@@ -323,9 +331,7 @@ function compute(){
       ra.pj++; rb.pj++;
       ra.gf+=r.a; ra.gc+=r.b;
       rb.gf+=r.b; rb.gc+=r.a;
-      if(r.a>r.b)ra.pts+=3;
-      else if(r.a<r.b)rb.pts+=3;
-      else{ra.pts++; rb.pts++;}
+      applyPoints(ra,rb,r);
     }
     rows.forEach(x=>x.dg=x.gf-x.gc);
     ranks[g]=sortGroupRowsRFEN(rows, groupMatches);
@@ -341,9 +347,7 @@ function miniTableStats(block, groupMatches){
     sa.pj++; sb.pj++;
     sa.gf+=r.a; sa.gc+=r.b;
     sb.gf+=r.b; sb.gc+=r.a;
-    if(r.a>r.b)sa.pts+=3;
-    else if(r.a<r.b)sb.pts+=3;
-    else{sa.pts++; sb.pts++;}
+    applyPoints(sa,sb,r);
   }
   Object.values(stats).forEach(x=>x.dg=x.gf-x.gc);
   return stats;
@@ -401,13 +405,19 @@ function visiblePhaseLabel(m){
 function bannerPhaseLabel(m){ if(m.phase==='GRUPOS')return 'FASE DE GRUPOS'; return visiblePhaseLabel(m);}
 function visibleMatchLabel(m){return `${visiblePhaseLabel(m)} · PARTIDO ${m.id}`}
 function isGroupComplete(g){let gm=matches.filter(x=>x.phase==='GRUPOS'&&x.group===g); return gm.length>0 && gm.every(x=>hasResult(x.id));}
-function confirmedWinnerId(id, seen=new Set()){let m=matchById(id),r=results[id]; if(!m||!hasResult(id)||r.a===r.b)return null; let side=r.a>r.b?m.teamA:m.teamB; return resolveTeamConfirmed(side, seen);}
-function confirmedLoserId(id, seen=new Set()){let m=matchById(id),r=results[id]; if(!m||!hasResult(id)||r.a===r.b)return null; let side=r.a<r.b?m.teamA:m.teamB; return resolveTeamConfirmed(side, seen);}
+function confirmedWinnerId(id, seen=new Set()){let m=matchById(id),side=resultWinnerSide(id); if(!m||!side)return null; return resolveTeamConfirmed(side==='A'?m.teamA:m.teamB, seen);}
+function confirmedLoserId(id, seen=new Set()){let m=matchById(id),side=resultLoserSide(id); if(!m||!side)return null; return resolveTeamConfirmed(side==='A'?m.teamA:m.teamB, seen);}
 function resolveTeamConfirmed(ref, seen=new Set()){ if(!ref)return null; if(ref.team)return ref.team; if(ref.groupRank){ if(!isGroupComplete(ref.groupRank.group))return null; let arr=ranks[ref.groupRank.group]||[]; return arr[ref.groupRank.rank-1]?.id||null; } let key=ref.winner||ref.loser; if(!key||seen.has(key))return null; seen.add(key); return ref.winner?confirmedWinnerId(key,seen):confirmedLoserId(key,seen);}
 function displayRefConfirmed(ref){let id=resolveTeamConfirmed(ref); return {id, name:id?teamName(id):refText(ref), resolved:!!id}}
 function centerBox(m){
   let r=results[m.id];
-  if(hasResult(m.id)) return `<div class="centerBox"><div class="scoreText">${r.a} - ${r.b}</div><div class="state">Final</div></div>`;
+  if(hasResult(m.id)){
+    let p=penaltySide(m.id), winId=confirmedWinnerId(m.id);
+    if(r.a===r.b && p && winId){
+      return `<div class="centerBox"><div class="scoreText">${r.a} - ${r.b}<span class="penMark">*</span></div><div class="state penalty">* ${up(shortTeamName(winId))} ganó en penaltis</div></div>`;
+    }
+    return `<div class="centerBox"><div class="scoreText">${r.a} - ${r.b}</div><div class="state">Final</div></div>`;
+  }
   return `<div class="centerBox"><div class="date">${dayText(dateTime(m), new Date())}</div><div class="time">${m.time}</div><div class="field">${m.field}</div></div>`;
 }
 function matchCard(m){
@@ -479,7 +489,15 @@ function readScoreValue(v){
   let n=Number(s.replace(',','.'));
   return Number.isFinite(n)?n:null;
 }
-async function refreshResults(){let q=$('#dayRefreshBtn'); if(q){q.className='refreshInline loading';q.textContent='Actualizando…';} let url=localStorage.getItem(LS.url); if(!url){setStatus('Error: falta URL Apps Script.'); if(q){q.className='refreshInline err';q.textContent='Error';} return} setStatus('Actualizando…'); try{let txt=await fetch(url,{cache:'no-store'}).then(r=>r.text()); let raw=parseSheetResponse(txt); let rows=Array.isArray(raw)?raw:(raw.results||raw.data||raw.values||[]); let next={}; for(const row of rows){let code=normCode(row.Partido??row.partido??row.codigo??row.Codigo??row[0]); let a=readScoreValue(row['Goles A']??row.golesA??row.goles_a??row.a??row.A??row[2]); let b=readScoreValue(row['Goles B']??row.golesB??row.goles_b??row.b??row.B??row[3]); if(code&&a!==null&&b!==null)next[code]={a,b}; } results=next; localStorage.setItem(LS.results,JSON.stringify(results)); let stamp=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); setStatus(`Actualizado a las ${stamp}. Resultados cargados: ${Object.keys(results).length}`); if(q){q.className='refreshInline ok';q.textContent='Actualizado'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.textContent='↻ Actualizar';}},1600);} renderAll(); }catch(e){console.error(e); if(q){q.className='refreshInline err';q.textContent='Error'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.textContent='↻ Actualizar';}},2200);} setStatus('Error al conectar o leer resultados. Revisa que el Apps Script devuelva JSON/JSONP válido.');}}
+function readPenaltyValue(v){
+  if(v===undefined||v===null)return null;
+  let s=String(v).trim().toUpperCase();
+  if(!s)return null;
+  if(s==='A'||s==='1'||s==='LOCAL')return 'A';
+  if(s==='B'||s==='2'||s==='VISITANTE')return 'B';
+  return null;
+}
+async function refreshResults(){let q=$('#dayRefreshBtn'); if(q){q.className='refreshInline loading';q.textContent='Actualizando…';} let url=localStorage.getItem(LS.url); if(!url){setStatus('Error: falta URL Apps Script.'); if(q){q.className='refreshInline err';q.textContent='Error';} return} setStatus('Actualizando…'); try{let txt=await fetch(url,{cache:'no-store'}).then(r=>r.text()); let raw=parseSheetResponse(txt); let rows=Array.isArray(raw)?raw:(raw.results||raw.data||raw.values||[]); let next={}; for(const row of rows){let code=normCode(row.Partido??row.partido??row.codigo??row.Codigo??row[0]); let a=readScoreValue(row['Goles A']??row.golesA??row.goles_a??row.a??row.A??row[2]); let b=readScoreValue(row['Goles B']??row.golesB??row.goles_b??row.b??row.B??row[3]); let p=readPenaltyValue(row.Penaltis??row.penaltis??row.penalty??row.Penalty??row.p??row.P??row[5]); if(code&&a!==null&&b!==null)next[code]={a,b,p}; } results=next; localStorage.setItem(LS.results,JSON.stringify(results)); let stamp=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); setStatus(`Actualizado a las ${stamp}. Resultados cargados: ${Object.keys(results).length}`); if(q){q.className='refreshInline ok';q.textContent='Actualizado'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.textContent='↻ Actualizar';}},1600);} renderAll(); }catch(e){console.error(e); if(q){q.className='refreshInline err';q.textContent='Error'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.textContent='↻ Actualizar';}},2200);} setStatus('Error al conectar o leer resultados. Revisa que el Apps Script devuelva JSON/JSONP válido.');}}
 function clearResults(){ if(!confirm('Esto borra sólo los resultados guardados en este móvil/navegador. No afecta al Google Sheet. ¿Continuar?'))return; results={}; localStorage.removeItem(LS.results); setStatus('Resultados locales borrados. Google Sheet intacto.'); renderAll();}
 function setStatus(t){$('#updateStatus').textContent=t; localStorage.setItem(LS.status,t)}
 init().catch(e=>{document.body.innerHTML='<pre>Error cargando la app: '+e.message+'</pre>'})
