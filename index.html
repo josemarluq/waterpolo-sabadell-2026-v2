@@ -3,7 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Waterpolo Sabadell 2026</title>
+  <title>Campeonato de España Infantil Masculino 2026 - Sabadell</title>
+<meta property="og:title" content="Campeonato de España Infantil Masculino 2026">
+<meta property="og:description" content="Calendario, resultados y clasificaciones">
+<meta property="og:image" content="https://josemarluq.github.io/waterpolo-sabadell-2026-v2/icon-512.png">
+<meta property="og:type" content="website">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
@@ -277,22 +281,6 @@
     .table tr.mainTeam{background:var(--club-soft)!important;}
     .place.mainTeam{background:var(--club-soft)!important;border-color:var(--club-main)!important;}
 
-
-    /* v1.23: búsqueda genérica + grupos compactos con escudo, posición y nombre corto */
-    .selectHint{margin:-6px 0 10px;color:var(--muted);font-size:13px;font-weight:700}
-    .table .posCol{width:34px;text-align:center!important;color:var(--muted);font-weight:1000}
-    .groupTeamCell{display:flex;align-items:center;gap:7px;min-width:0;text-align:left}
-    .groupCrest{width:22px;height:22px;border-radius:50%;object-fit:contain;background:#fff;border:1px solid rgba(0,0,0,.08);padding:2px;flex:0 0 22px}
-    .groupTeamName{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-    @media(max-width:520px){
-      .table{font-size:12px}
-      .table th,.table td{padding:7px 4px}
-      .table .posCol{width:28px}
-      .groupCrest{width:20px;height:20px;flex-basis:20px}
-      .groupTeamCell{gap:5px}
-      .groupTeamName{max-width:92px}
-    }
-
 </style>
 </head>
 <body>
@@ -301,7 +289,7 @@
   <section id="banner" class="banner"><small>PRÓXIMO PARTIDO</small><h2>Cargando…</h2></section>
   <main>
     <section id="calendar" class="panel active"><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="calendarList"></div></section>
-    <section id="search" class="panel"><h3 class="sectionTitle">VER PARTIDOS</h3><p class="selectHint">Selecciona un equipo o un grupo</p><select id="teamSelect"></select><div id="teamMatches"></div></section>
+    <section id="search" class="panel"><h3 class="sectionTitle">BUSCAR PARTIDOS POR EQUIPO</h3><select id="teamSelect"></select><div id="teamMatches"></div></section>
     <section id="groups" class="panel"><h3 class="sectionTitle">CLASIFICACIÓN DE GRUPOS</h3><div id="groupsBox" class="gridGroups"></div></section>
     <section id="finals" class="panel"><h3 class="sectionTitle">CLASIFICACIÓN FINAL</h3><div id="placesBox" class="places"></div></section>
   </main>
@@ -454,9 +442,9 @@ function matchCard(m){
 }
 function renderTeamMatches(){let val=$('#teamSelect').value||mainTeam(); let list=[]; if(String(val).startsWith('GROUP_')){let g=String(val).replace('GROUP_',''); list=matches.filter(m=>m.phase==='GRUPOS'&&m.group===g);}else{let id=val; list=matches.filter(m=>resolveTeamConfirmed(m.teamA)===id||resolveTeamConfirmed(m.teamB)===id);} $('#teamMatches').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con ese filtro.</p>';}
 function refCouldBecome(ref,id){ if(ref.team)return ref.team===id; if(ref.groupRank)return groupTeams(ref.groupRank.group).includes(id); if(ref.winner||ref.loser){let m=matchById(ref.winner||ref.loser); return m&&(refCouldBecome(m.teamA,id)||refCouldBecome(m.teamB,id));} return false;}
-function renderGroups(){ $('#groupsBox').innerHTML=groupIds().map(g=>`<div class="card"><h3>GRUPO ${g}</h3><table class="table"><thead><tr><th class="posCol">#</th><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>PJ</th></tr></thead><tbody>${(ranks[g]||[]).map((x,i)=>`<tr class="${isMain(x.id)?'mainTeam':''}"><td class="posCol">${i+1}º</td><td><div class="groupTeamCell"><img class="groupCrest" src="${logo(teams[x.id])}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><span class="groupTeamName">${up(shortTeamName(x.id))}</span></div></td><td>${x.pts}</td><td>${x.dg}</td><td>${x.gf}</td><td>${x.pj}</td></tr>`).join('')}</tbody></table></div>`).join(''); }
+function renderGroups(){ $('#groupsBox').innerHTML=groupIds().map(g=>`<div class="card"><h3>GRUPO ${g}</h3><table class="table"><thead><tr><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>PJ</th></tr></thead><tbody>${(ranks[g]||[]).map(x=>`<tr class="${isMain(x.id)?'mainTeam':''}"><td>${up(teamName(x.id))}</td><td>${x.pts}</td><td>${x.dg}</td><td>${x.gf}</td><td>${x.pj}</td></tr>`).join('')}</tbody></table></div>`).join(''); }
 function finalTeam(place){let fp=(DATA.finalPlaces||[]).find(x=>x.place===place);return fp?resolveTeamConfirmed(fp.source):null}
-function renderFinals(){let html=''; for(let i=1;i<=24;i++){let id=finalTeam(i), t=teams[id]; html+=`<div class="place ${isMain(id)?'mainTeam':''}"><span class="placeNum">${i}º</span><img class="crest" src="${id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><span>${id?up(shortTeamName(id)):'—'}</span></div>`} $('#placesBox').innerHTML=html; }
+function renderFinals(){let html=''; for(let i=1;i<=24;i++){let id=finalTeam(i), t=teams[id]; html+=`<div class="place ${isMain(id)?'mainTeam':''}"><span class="placeNum">${i}º</span><img class="crest" src="${id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><span>${id?up(teamName(id)):'—'}</span></div>`} $('#placesBox').innerHTML=html; }
 const SHORT_NAMES={"BRAINS": "BRAINS", "BARCELONETA": "BARCELONETA", "ASKARTZA": "ASKARTZA", "MALAGA": "MÁLAGA", "MORVEDRE": "MORVEDRE", "CABALLA": "CABALLA", "HELIOS": "HELIOS", "LAS_PALMAS": "LAS PALMAS", "SOLLER": "SÓLLER", "NAVARRA": "NAVARRA", "CARTHAGO": "CARTHAGO", "BARCELONA": "BARCELONA", "TENERIFE_ECHEYDE": "ECHEYDE", "OLIVAR": "OLIVAR", "TURIA": "TURIA", "ALGECIRAS": "ALGECIRAS", "LEIOA": "LEIOA", "TRUDGEON_SESTAO": "SESTAO", "SABADELL": "SABADELL", "MEDITERRANI": "MEDITERRANI", "ALCORCON": "ALCORCÓN", "HORTA": "HORTA", "CANOE": "CANOE", "ENCINAS": "ENCINAS"};
 const TEAM_COLORS={
   "BRAINS":"#2E6EB5","BARCELONETA":"#F4C300","ASKARTZA":"#008A4E","MALAGA":"#1E5AA8",
