@@ -4,15 +4,55 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Campeonato de España Infantil Masculino 2026 - Sabadell</title>
-<meta property="og:title" content="Campeonato de España Infantil Masculino 2026 - Sabadell">
-<meta property="og:site_name" content="Calendario, resultados y clasificaciones">
-<meta property="og:description" content="Calendario, resultados y clasificaciones">
-<meta property="og:image" content="https://josemarluq.github.io/waterpolo-sabadell-2026-v2/icon-512.png">
-<meta property="og:type" content="website">
+  <meta property="og:title" content="Campeonato de España Infantil Masculino 2026 - Sabadell">
+  <meta property="og:description" content="Calendario, resultados y clasificaciones">
+  <meta property="og:image" content="https://josemarluq.github.io/waterpolo-sabadell-2026-v2/icon-512.png">
+  <meta property="og:url" content="https://josemarluq.github.io/waterpolo-sabadell-2026-v2/index.html">
+  <meta property="og:type" content="website">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <meta name="theme-color" content="#176b55">
+  <script>
+  (function(){
+    try{
+      var fav = localStorage.getItem('wp_main_team') || 'ENCINAS';
+      var colors = {
+        BRAINS:'#2E6EB5', BARCELONETA:'#F4C300', ASKARTZA:'#008A4E', MALAGA:'#1E5AA8',
+        MORVEDRE:'#D32F2F', CABALLA:'#003366', HELIOS:'#FFD700', LAS_PALMAS:'#1565C0',
+        SOLLER:'#4AA3DF', NAVARRA:'#C62828', CARTHAGO:'#111111', BARCELONA:'#7A1F3D',
+        TENERIFE_ECHEYDE:'#00A6D6', OLIVAR:'#D32F2F', TURIA:'#1565C0', ALGECIRAS:'#003366',
+        LEIOA:'#003366', TRUDGEON_SESTAO:'#008A4E', SABADELL:'#003366', MEDITERRANI:'#0057A3',
+        ALCORCON:'#1565C0', ENCINAS:'#1F6B3A', CANOE:'#FFD700', HORTA:'#D32F2F'
+      };
+      function hexToRgb(hex){
+        hex=String(hex||'').replace('#','');
+        if(hex.length===3) hex=hex.split('').map(function(x){return x+x}).join('');
+        var n=parseInt(hex,16);
+        return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};
+      }
+      function rgbToHex(r,g,b){
+        return '#'+[r,g,b].map(function(x){
+          return Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,'0');
+        }).join('');
+      }
+      function mixHex(a,b,p){
+        var A=hexToRgb(a),B=hexToRgb(b);
+        return rgbToHex(A.r+(B.r-A.r)*p,A.g+(B.g-A.g)*p,A.b+(B.b-A.b)*p);
+      }
+      function lum(hex){
+        var c=hexToRgb(hex);
+        return (0.2126*c.r+0.7152*c.g+0.0722*c.b)/255;
+      }
+      var color = colors[fav] || '#1F6B3A';
+      var root = document.documentElement.style;
+      root.setProperty('--club-main', color);
+      root.setProperty('--club-dark', mixHex(color,'#000000',0.28));
+      root.setProperty('--club-soft', mixHex(color,'#ffffff',0.88));
+      root.setProperty('--club-text', lum(color)>0.58 ? '#15202b' : '#ffffff');
+    }catch(e){}
+  })();
+  </script>
   <style>
     :root{--bg:#f4f7fb;--card:#fff;--text:#15202b;--muted:#607080;--line:#dbe4ed;--main:#176b55;--main2:#e9f6f1;--blue:#1769aa;--danger:#b42318;--warn:#fff4db;--shadow:0 10px 28px rgba(21,32,43,.10);--radius:18px}
     *{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text)}
@@ -205,9 +245,9 @@
 
     /* v1.13: colores dinámicos por equipo favorito + banner finalizado */
     :root{
-      --club-main:#1565C0;
-      --club-dark:#0d47a1;
-      --club-soft:#eaf3ff;
+      --club-main:#1F6B3A;
+      --club-dark:#164d2b;
+      --club-soft:#e9f4ed;
       --club-text:#ffffff;
     }
     .banner:not(.urgent):not(.live){
@@ -453,7 +493,7 @@ const TEAM_COLORS={
   "SOLLER":"#4AA3DF","NAVARRA":"#C62828","CARTHAGO":"#111111","BARCELONA":"#7A1F3D",
   "TENERIFE_ECHEYDE":"#00A6D6","OLIVAR":"#D32F2F","TURIA":"#1565C0","ALGECIRAS":"#003366",
   "LEIOA":"#003366","TRUDGEON_SESTAO":"#008A4E","SABADELL":"#003366","MEDITERRANI":"#0057A3",
-  "ALCORCON":"#1565C0","ENCINAS":"#237A35","CANOE":"#FFD700","HORTA":"#D32F2F"
+  "ALCORCON":"#1565C0","ENCINAS":"#1F6B3A","CANOE":"#FFD700","HORTA":"#D32F2F"
 };
 function shortTeamName(id){return SHORT_NAMES[id]||teamName(id)}
 function hexToRgb(hex){hex=String(hex||'').replace('#',''); if(hex.length===3)hex=hex.split('').map(x=>x+x).join(''); let n=parseInt(hex,16); return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};}
