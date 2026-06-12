@@ -314,7 +314,7 @@
     .banner::after{display:none!important;}
 
     /* v1.21: penaltis compactos + nombres cortos en tarjetas */
-    .centerBox .scoreText .penMedal{font-size:.82em;vertical-align:6%;margin:0 5px;color:#b42318}
+    .centerBox .scoreText .penMedal{font-size:.72em;vertical-align:8%;margin:0 4px;color:#b42318}
     .centerBox .state.penalty{font-size:10px;line-height:1.15;color:#607080;text-transform:uppercase;font-weight:900;max-width:150px;margin:3px auto 0;letter-spacing:.02em}
 
 
@@ -332,6 +332,42 @@
       text-transform:none!important;
     }
 
+
+    /* v1.28: mejoras finales calendario, grupos y penaltis */
+    .refreshInline{
+      background:#f8fafc!important;
+      color:#1f2937!important;
+      border:2px solid #9ca3af!important;
+      box-shadow:0 4px 12px rgba(21,32,43,.08)!important;
+    }
+    .fieldsNow{margin:12px 0 14px}
+    .fieldsNowTitle{font-size:15px;font-weight:1000;margin:4px 0 8px;color:#1f2937}
+    .fieldsGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
+    .fieldNowCard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;box-shadow:0 5px 16px rgba(21,32,43,.07)}
+    .fieldNowHead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:7px}
+    .fieldName{font-weight:1000;color:#1f2937}
+    .fieldStatus{font-size:10px;font-weight:1000;border-radius:999px;padding:4px 7px;background:#eef2f7;color:#526070;white-space:nowrap}
+    .fieldStatus.live{background:#dcfce7;color:#166534}
+    .fieldTeams{font-size:13px;font-weight:1000;line-height:1.18}
+    .fieldSub{font-size:11px;color:#607080;margin-top:5px;font-weight:800}
+    .groupTeamCell{display:flex;align-items:center;gap:6px;min-width:0}
+    .groupTeamCell .crest{width:22px;height:22px;flex:0 0 22px;padding:2px}
+    .groupTeamName{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .table .posCell{font-weight:1000;color:#374151;text-align:left!important;width:34px}
+    .penaltyScoreWrap{position:relative;display:inline-block;min-width:74px;text-align:center}
+    .penaltyScoreWrap .penMedal{position:absolute;top:50%;transform:translateY(-50%);font-size:.76em;color:#b42318}
+    .penaltyScoreWrap .penMedal.left{right:100%;margin-right:5px}
+    .penaltyScoreWrap .penMedal.right{left:100%;margin-left:5px}
+    .penaltyScoreWrap .scoreMain{display:inline-block}
+    @media(max-width:520px){
+      .fieldsGrid{grid-template-columns:1fr}
+      .groupTeamCell .crest{width:20px;height:20px;flex-basis:20px}
+      .groupTeamName{max-width:96px}
+      .table{font-size:12px}
+      .table th,.table td{padding:7px 4px}
+      .penaltyScoreWrap{min-width:60px}
+    }
+
 </style>
 </head>
 <body>
@@ -339,8 +375,8 @@
   <header class="top"><img class="appLogo" src="icon-192.png" alt="SBD 2026"><div class="title"><h1 id="appTitle">Waterpolo</h1><p id="appSub">Cargando campeonato…</p></div><div class="headerActions"><button class="adminBtn" id="openAdmin" aria-label="Admin">⋯</button></div></header>
   <section id="banner" class="banner"><small>PRÓXIMO PARTIDO</small><h2>Cargando…</h2></section>
   <main>
-    <section id="calendar" class="panel active"><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="calendarList"></div></section>
-    <section id="search" class="panel"><h3 class="sectionTitle">BUSCAR PARTIDOS POR EQUIPO</h3><select id="teamSelect"></select><div id="teamMatches"></div></section>
+    <section id="calendar" class="panel active"><div id="fieldsNowBox"></div><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="calendarList"></div></section>
+    <section id="search" class="panel"><h3 class="sectionTitle">BUSCA POR EQUIPO O GRUPO</h3><select id="teamSelect"></select><div id="teamMatches"></div></section>
     <section id="groups" class="panel"><h3 class="sectionTitle">CLASIFICACIÓN DE GRUPOS</h3><div id="groupsBox" class="gridGroups"></div></section>
     <section id="finals" class="panel"><h3 class="sectionTitle">CLASIFICACIÓN FINAL</h3><div id="placesBox" class="places"></div></section>
   </main>
@@ -489,8 +525,35 @@ function updateQuickRefreshVisibility(tab){
 
 function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); $('#banner').style.display=b.dataset.tab==='calendar'?'':'none'; if(b.dataset.tab==='search')renderTeamMatches(); }); $('#banner').style.display=''; $('#openAdmin').onclick=()=>{ const adv=document.querySelector('.advancedBox'); if(adv) adv.removeAttribute('open'); $('#admin').classList.add('open'); }; $('#admin').addEventListener('click',e=>{if(e.target===$('#admin'))$('#admin').classList.remove('open');}); $('#closeAdmin').onclick=()=>$('#admin').classList.remove('open'); $('#urlInput').value=localStorage.getItem(LS.url)||''; $('#saveUrl').onclick=()=>{localStorage.setItem(LS.url,$('#urlInput').value.trim()); setStatus('URL guardada.');}; const teamOpts=DATA.teams.slice().sort((a,b)=>shortTeamName(a.id).localeCompare(shortTeamName(b.id),'es')).map(t=>`<option value="${t.id}">${up(shortTeamName(t.id))}</option>`).join(''); const groupOpts=groupIds().map(g=>`<option value="GROUP_${g}">PARTIDOS GRUPO ${g}</option>`).join(''); $('#teamSelect').innerHTML=`<optgroup label="Equipos">${teamOpts}</optgroup><optgroup label="Grupos">${groupOpts}</optgroup>`; $('#mainTeamSelect').innerHTML=teamOpts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; if($('#clearBtn')) $('#clearBtn').onclick=clearResults; $$('[data-sim]').forEach(b=>b.onclick=()=>{simMode=b.dataset.sim; renderBanner();}); }
 function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visiblePhases; $('#dayFilters').classList.add('dayRow'); $('#dayFilters').innerHTML=`<div class="dayChips">${days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}</div><button class="refreshInline" id="dayRefreshBtn" type="button">↻ Actualizar</button>`; $('#phaseFilters').innerHTML=phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join(''); $$('[data-day]').forEach(b=>{let d=b.dataset.day; b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||filterPhaseForCalendar(m)===activePhase)); b.onclick=()=>{activeDay=activeDay===d?null:d; renderCalendar()}}); $$('[data-phase]').forEach(b=>{let p=b.dataset.phase; b.disabled=!matches.some(m=>filterPhaseForCalendar(m)===p&&(!activeDay||m.dayLabel===activeDay)); b.onclick=()=>{activePhase=activePhase===p?null:p; renderCalendar()}}); const rb=$('#dayRefreshBtn'); if(rb) rb.onclick=refreshResults; }
-function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
+function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderFieldsNow(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
+function formatDG(v){return v>0?'+'+v:String(v)}
+function fieldDisplayMatch(m){
+  let a=displayRefConfirmed(m.teamA), b=displayRefConfirmed(m.teamB);
+  return `${up(displayNameShort(a))} - ${up(displayNameShort(b))}`;
+}
+function renderFieldsNow(){
+  const box=$('#fieldsNowBox');
+  if(!box||!matches.length)return;
+  const now=new Date();
+  const fields=[...new Set(matches.map(m=>m.field).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'es'));
+  const html=fields.map(field=>{
+    const list=matches.filter(m=>m.field===field).sort((a,b)=>dateTime(a)-dateTime(b));
+    const live=list.find(m=>{
+      const dt=dateTime(m);
+      return !hasResult(m.id) && now>=dt && now<new Date(dt.getTime()+40*60000);
+    });
+    const next=list.find(m=>!hasResult(m.id) && dateTime(m)>now);
+    if(live){
+      return `<div class="fieldNowCard"><div class="fieldNowHead"><span class="fieldName">${field}</span><span class="fieldStatus live">EN JUEGO</span></div><div class="fieldTeams">${fieldDisplayMatch(live)}</div><div class="fieldSub">${visiblePhaseLabel(live)} · ${live.time}</div>${next?`<div class="fieldSub">Siguiente: ${fieldDisplayMatch(next)} · ${next.time}</div>`:''}</div>`;
+    }
+    if(next){
+      return `<div class="fieldNowCard"><div class="fieldNowHead"><span class="fieldName">${field}</span><span class="fieldStatus">SIGUIENTE</span></div><div class="fieldTeams">${fieldDisplayMatch(next)}</div><div class="fieldSub">${visiblePhaseLabel(next)} · ${next.time}</div></div>`;
+    }
+    return `<div class="fieldNowCard"><div class="fieldNowHead"><span class="fieldName">${field}</span><span class="fieldStatus">FINALIZADO</span></div><div class="fieldTeams muted">Sin más partidos</div></div>`;
+  }).join('');
+  box.innerHTML=`<section class="fieldsNow"><div class="fieldsNowTitle">EN LAS PISCINAS AHORA</div><div class="fieldsGrid">${html}</div></section>`;
+}
 function renderCalendar(){ filterButtons(); let list=matches.filter(m=>(!activeDay||m.dayLabel===activeDay)&&(!activePhase||filterPhaseForCalendar(m)===activePhase)); $('#calendarList').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con esos filtros.</p>'; }
 function displayNameShort(d){return d.id?shortTeamName(d.id):d.name}
 function teamBlock(ref, side){let d=displayRefConfirmed(ref), t=teams[d.id]; let img=`<img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}">`; let name=`<div class="teamName">${up(displayNameShort(d))}</div>`; return `<div class="team ${side==='right'?'right':'left'}">${side==='right'?img+name:name+img}</div>`}
@@ -521,9 +584,8 @@ function centerBox(m){
   if(hasResult(m.id)){
     if(r.a===r.b && Number.isFinite(r.pa) && Number.isFinite(r.pb)){
       let totalA=r.a+r.pa, totalB=r.b+r.pb;
-      let medal='<span class="penMedal">🏅</span>';
-      let score=r.pa>r.pb?`${medal}${r.a} - ${r.b}`:`${r.a} - ${r.b}${medal}`;
-      return `<div class="centerBox"><div class="scoreText">${score}</div><div class="state penalty">(${totalA} - ${totalB}) P</div></div>`;
+      let medalSide=r.pa>r.pb?'left':'right';
+      return `<div class="centerBox"><div class="scoreText"><span class="penaltyScoreWrap"><span class="penMedal ${medalSide}">🏅</span><span class="scoreMain">${r.a} - ${r.b}</span></span></div><div class="state penalty">(${totalA} - ${totalB}) P</div></div>`;
     }
     return `<div class="centerBox"><div class="scoreText">${r.a} - ${r.b}</div><div class="state">Final</div></div>`;
   }
@@ -535,7 +597,7 @@ function matchCard(m){
 }
 function renderTeamMatches(){let val=$('#teamSelect').value||mainTeam(); let list=[]; if(String(val).startsWith('GROUP_')){let g=String(val).replace('GROUP_',''); list=matches.filter(m=>m.phase==='GRUPOS'&&m.group===g);}else{let id=val; list=matches.filter(m=>resolveTeamConfirmed(m.teamA)===id||resolveTeamConfirmed(m.teamB)===id);} $('#teamMatches').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con ese filtro.</p>';}
 function refCouldBecome(ref,id){ if(ref.team)return ref.team===id; if(ref.groupRank)return groupTeams(ref.groupRank.group).includes(id); if(ref.winner||ref.loser){let m=matchById(ref.winner||ref.loser); return m&&(refCouldBecome(m.teamA,id)||refCouldBecome(m.teamB,id));} return false;}
-function renderGroups(){ $('#groupsBox').innerHTML=groupIds().map(g=>`<div class="card"><h3>GRUPO ${g}</h3><table class="table"><thead><tr><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>PJ</th></tr></thead><tbody>${(ranks[g]||[]).map(x=>`<tr class="${isMain(x.id)?'mainTeam':''}"><td>${up(teamName(x.id))}</td><td>${x.pts}</td><td>${x.dg}</td><td>${x.gf}</td><td>${x.pj}</td></tr>`).join('')}</tbody></table></div>`).join(''); }
+function renderGroups(){ $('#groupsBox').innerHTML=groupIds().map(g=>`<div class="card"><h3>GRUPO ${g}</h3><table class="table"><thead><tr><th>Pos</th><th>Equipo</th><th>Pts</th><th>DG</th><th>GF</th><th>PJ</th></tr></thead><tbody>${(ranks[g]||[]).map((x,i)=>{let t=teams[x.id];return `<tr class="${isMain(x.id)?'mainTeam':''}"><td class="posCell">${i+1}º</td><td><div class="groupTeamCell"><img class="crest" src="${t?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><span class="groupTeamName">${up(shortTeamName(x.id))}</span></div></td><td>${x.pts}</td><td>${formatDG(x.dg)}</td><td>${x.gf}</td><td>${x.pj}</td></tr>`}).join('')}</tbody></table></div>`).join(''); }
 function finalTeam(place){let fp=(DATA.finalPlaces||[]).find(x=>x.place===place);return fp?resolveTeamConfirmed(fp.source):null}
 function renderFinals(){let html=''; for(let i=1;i<=24;i++){let id=finalTeam(i), t=teams[id]; html+=`<div class="place ${isMain(id)?'mainTeam':''}"><span class="placeNum">${i}º</span><img class="crest" src="${id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><span>${id?up(teamName(id)):'—'}</span></div>`} $('#placesBox').innerHTML=html; }
 const SHORT_NAMES={"BRAINS": "BRAINS", "BARCELONETA": "BARCELONETA", "ASKARTZA": "ASKARTZA", "MALAGA": "MÁLAGA", "MORVEDRE": "MORVEDRE", "CABALLA": "CABALLA", "HELIOS": "HELIOS", "LAS_PALMAS": "LAS PALMAS", "SOLLER": "SÓLLER", "NAVARRA": "NAVARRA", "CARTHAGO": "CARTHAGO", "BARCELONA": "BARCELONA", "TENERIFE_ECHEYDE": "ECHEYDE", "OLIVAR": "OLIVAR", "TURIA": "TURIA", "ALGECIRAS": "ALGECIRAS", "LEIOA": "LEIOA", "TRUDGEON_SESTAO": "SESTAO", "SABADELL": "SABADELL", "MEDITERRANI": "MEDITERRANI", "ALCORCON": "ALCORCÓN", "HORTA": "HORTA", "CANOE": "CANOE", "ENCINAS": "ENCINAS"};
