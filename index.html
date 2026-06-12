@@ -377,6 +377,20 @@
     .liveLabel{display:inline-flex;align-items:center;font-weight:1000;color:#166534;background:#dcfce7;border:1px solid #86efac;border-radius:999px;padding:5px 9px;white-space:nowrap;font-size:12px}
     .chip.nowChip.active{background:#dcfce7!important;border-color:#22c55e!important;color:#166534!important}
 
+
+    /* v1.31: vista AHORA por campos */
+    .nowFieldsView{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:10px}
+    .nowFieldCard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:var(--shadow)}
+    .nowFieldHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+    .nowFieldName{font-size:14px;font-weight:1000;color:#1f2937}
+    .nowFieldTag{font-size:10px;font-weight:1000;border-radius:999px;padding:4px 8px;background:#eef2f7;color:#526070;white-space:nowrap}
+    .nowFieldTag.live{background:#dcfce7;color:#166534;border:1px solid #86efac}
+    .nowBlock{border-top:1px solid #edf2f7;padding-top:8px;margin-top:8px}
+    .nowBlock:first-of-type{border-top:0;padding-top:0;margin-top:0}
+    .nowLabel{font-size:10px;font-weight:1000;color:#607080;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+    .nowTeams{font-size:14px;font-weight:1000;line-height:1.18}
+    .nowMeta{font-size:11px;color:#607080;font-weight:800;margin-top:4px}
+
 </style>
 </head>
 <body>
@@ -582,7 +596,30 @@ function renderFieldsNow(){
   }).join('');
   box.innerHTML=`<section class="fieldsNow"><div class="fieldsNowTitle">EN LAS PISCINAS AHORA</div><div class="fieldsGrid">${html}</div></section>`;
 }
-function renderCalendar(){ filterButtons(); let list=matches.filter(m=>activeNow?isNowRelevant(m):((!activeDay||m.dayLabel===activeDay)&&(!activePhase||filterPhaseForCalendar(m)===activePhase))).sort((a,b)=>dateTime(a)-dateTime(b)); $('#calendarList').innerHTML=list.map(matchCard).join('')||(activeNow?'<p class="muted">No hay partidos en juego ni próximos en la siguiente hora.</p>':'<p class="muted">No hay partidos con esos filtros.</p>'); }
+function renderNowFieldsView(){
+  const now=appNow();
+  const fields=[...new Set(matches.map(m=>m.field).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'es'));
+  const cards=[];
+  for(const field of fields){
+    const list=matches.filter(m=>m.field===field).sort((a,b)=>dateTime(a)-dateTime(b));
+    const live=list.find(m=>isLiveMatch(m));
+    const soon=list.find(m=>isSoonMatch(m,60));
+    if(!live && !soon)continue;
+    const liveHtml=live?`<div class="nowBlock"><div class="nowLabel"><span class="liveDot"></span>En juego</div><div class="nowTeams">${fieldDisplayMatch(live)}</div><div class="nowMeta">${live.time} · ${visiblePhaseLabel(live)}</div></div>`:'';
+    const soonHtml=soon?`<div class="nowBlock"><div class="nowLabel">Próximamente</div><div class="nowTeams">${fieldDisplayMatch(soon)}</div><div class="nowMeta">${soon.time} · ${visiblePhaseLabel(soon)}</div></div>`:'';
+    cards.push(`<article class="nowFieldCard"><div class="nowFieldHead"><span class="nowFieldName">${field}</span><span class="nowFieldTag ${live?'live':''}">${live?'EN JUEGO':'PRÓXIMO'}</span></div>${liveHtml}${soonHtml}</article>`);
+  }
+  return cards.length?`<section class="nowFieldsView">${cards.join('')}</section>`:'<p class="muted">No hay partidos en juego ni próximos en la siguiente hora.</p>';
+}
+function renderCalendar(){
+  filterButtons();
+  if(activeNow){
+    $('#calendarList').innerHTML=renderNowFieldsView();
+    return;
+  }
+  let list=matches.filter(m=>(!activeDay||m.dayLabel===activeDay)&&(!activePhase||filterPhaseForCalendar(m)===activePhase)).sort((a,b)=>dateTime(a)-dateTime(b));
+  $('#calendarList').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con esos filtros.</p>';
+}
 function displayNameShort(d){return d.id?shortTeamName(d.id):d.name}
 function teamBlock(ref, side){let d=displayRefConfirmed(ref), t=teams[d.id]; let img=`<img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}">`; let name=`<div class="teamName">${up(displayNameShort(d))}</div>`; return `<div class="team ${side==='right'?'right':'left'}">${side==='right'?img+name:name+img}</div>`}
 function visiblePhaseLabel(m){
