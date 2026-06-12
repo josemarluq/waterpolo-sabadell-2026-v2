@@ -433,6 +433,29 @@
       .phaseRow .refreshInline{margin-left:auto!important;margin-top:0!important}
     }
 
+
+    /* v1.34: botón Resultados junto a FINALES */
+    @media(max-width:520px){
+      .phaseChips{
+        display:grid!important;
+        grid-template-columns:repeat(4,1fr)!important;
+        gap:6px!important;
+      }
+      .phaseChips .chip:last-child{
+        grid-column:1 / span 1;
+      }
+      .phaseRow{
+        display:grid!important;
+        grid-template-columns:1fr auto!important;
+        align-items:end!important;
+      }
+      .phaseRow .refreshInline{
+        margin-left:8px!important;
+        margin-bottom:0!important;
+        white-space:nowrap!important;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -608,7 +631,7 @@ function isSoonMatch(m, minutes=60){
   return dt>now && dt<=new Date(now.getTime()+minutes*60000);
 }
 function isNowRelevant(m){return isLiveMatch(m)||isSoonMatch(m,60)}
-function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visiblePhases; $('#dayFilters').classList.add('dayRow'); $('#phaseFilters').classList.add('phaseRow'); $('#dayFilters').innerHTML=`<div class="dayChips">${days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}<button class="chip nowChip ${activeNow?'active':''}" data-now="1">AHORA</button></div>`; $('#phaseFilters').innerHTML=`<div class="phaseChips">${phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join('')}</div><button class="refreshInline" id="dayRefreshBtn" type="button">↻ Actualizar resultados</button>`; $$('[data-day]').forEach(b=>{let d=b.dataset.day; b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||filterPhaseForCalendar(m)===activePhase)); b.onclick=()=>{activeNow=false;activeDay=activeDay===d?null:d; renderCalendar()}}); $$('[data-phase]').forEach(b=>{let p=b.dataset.phase; b.disabled=!matches.some(m=>filterPhaseForCalendar(m)===p&&(!activeDay||m.dayLabel===activeDay)); b.onclick=()=>{activeNow=false;activePhase=activePhase===p?null:p; renderCalendar()}}); const nb=$('[data-now]'); if(nb) nb.onclick=()=>{activeNow=!activeNow;if(activeNow){activeDay=null;activePhase=null;}renderCalendar()}; const rb=$('#dayRefreshBtn'); if(rb) rb.onclick=refreshResults; }
+function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visiblePhases; $('#dayFilters').classList.add('dayRow'); $('#phaseFilters').classList.add('phaseRow'); $('#dayFilters').innerHTML=`<div class="dayChips">${days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}<button class="chip nowChip ${activeNow?'active':''}" data-now="1">AHORA</button></div>`; $('#phaseFilters').innerHTML=`<div class="phaseChips">${phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join('')}</div><button class="refreshInline" id="dayRefreshBtn" type="button">↻ Resultados</button>`; $$('[data-day]').forEach(b=>{let d=b.dataset.day; b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||filterPhaseForCalendar(m)===activePhase)); b.onclick=()=>{activeNow=false;activeDay=activeDay===d?null:d; renderCalendar()}}); $$('[data-phase]').forEach(b=>{let p=b.dataset.phase; b.disabled=!matches.some(m=>filterPhaseForCalendar(m)===p&&(!activeDay||m.dayLabel===activeDay)); b.onclick=()=>{activeNow=false;activePhase=activePhase===p?null:p; renderCalendar()}}); const nb=$('[data-now]'); if(nb) nb.onclick=()=>{activeNow=!activeNow;if(activeNow){activeDay=null;activePhase=null;}renderCalendar()}; const rb=$('#dayRefreshBtn'); if(rb) rb.onclick=refreshResults; }
 function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
 function formatDG(v){return v>0?'+'+v:String(v)}
@@ -784,7 +807,7 @@ async function refreshResults(){let q=$('#dayRefreshBtn'); if(q){q.className='re
       if(code&&a!==null&&b!==null){
         next[code]={a,b};
         if(pa!==null&&pb!==null){next[code].pa=pa; next[code].pb=pb;}
-      } } results=next; localStorage.setItem(LS.results,JSON.stringify(results)); let stamp=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); setStatus(`Actualizado a las ${stamp}. Resultados cargados: ${Object.keys(results).length}`); if(q){q.className='refreshInline ok';q.textContent='Actualizado'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.textContent='↻ Actualizar resultados';}},1600);} renderAll(); }catch(e){console.error(e); if(q){q.className='refreshInline err';q.textContent='Error'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.textContent='↻ Actualizar resultados';}},2200);} setStatus('Error al conectar o leer resultados. Revisa que el Apps Script devuelva JSON/JSONP válido.');}}
+      } } results=next; localStorage.setItem(LS.results,JSON.stringify(results)); let stamp=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); setStatus(`Actualizado a las ${stamp}. Resultados cargados: ${Object.keys(results).length}`); if(q){q.className='refreshInline ok';q.textContent='Actualizado'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.textContent='↻ Resultados';}},1600);} renderAll(); }catch(e){console.error(e); if(q){q.className='refreshInline err';q.textContent='Error'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.textContent='↻ Resultados';}},2200);} setStatus('Error al conectar o leer resultados. Revisa que el Apps Script devuelva JSON/JSONP válido.');}}
 function clearResults(){ if(!confirm('Esto borra sólo los resultados guardados en este móvil/navegador. No afecta al Google Sheet. ¿Continuar?'))return; results={}; localStorage.removeItem(LS.results); setStatus('Resultados locales borrados. Google Sheet intacto.'); renderAll();}
 function setStatus(t){$('#updateStatus').textContent=t; localStorage.setItem(LS.status,t)}
 init().catch(e=>{document.body.innerHTML='<pre>Error cargando la app: '+e.message+'</pre>'})
