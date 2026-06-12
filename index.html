@@ -623,6 +623,124 @@
       .refreshIcon{display:inline!important}
     }
 
+
+    /* v1.38: fases+resultados bien estructurados, banner estable y AHORA pulido */
+    .banner.live{
+      background:linear-gradient(135deg,var(--club-main),var(--club-dark))!important;
+      animation:none!important;
+      color:var(--club-text)!important;
+    }
+    .banner.live .bannerCenterBox{
+      background:#ecfdf5!important;
+      color:#065f46!important;
+    }
+    .banner.urgent{
+      background:linear-gradient(135deg,var(--club-main),var(--club-dark))!important;
+      animation:none!important;
+      color:var(--club-text)!important;
+    }
+    .banner.urgent .bannerCenterBox{
+      background:#fffdf0!important;
+      color:#0b5a35!important;
+    }
+    @keyframes clockPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}
+    .clockDot{display:inline-block;margin-right:6px;animation:clockPulse 1.15s infinite;vertical-align:0}
+    .nowFieldName{font-size:22px!important;font-weight:1000!important;color:#0f172a!important}
+    .nowLabel{font-size:12px!important;font-weight:900!important;color:#607080!important;text-transform:none!important;letter-spacing:.01em!important}
+    .nowLine{font-size:17px!important;font-weight:1000!important;color:#0f172a!important;line-height:1.25!important}
+    .nowLine .nowTime{font-size:18px!important;font-weight:1000!important;color:#0f172a!important;margin-right:6px!important}
+    .nowPhase{display:block!important;margin-left:0!important;margin-top:3px!important;font-size:13px!important;font-weight:500!important;color:#607080!important}
+    .phaseRow{display:grid!important;grid-template-columns:1fr auto!important;gap:8px!important;align-items:end!important}
+    .phaseChips{display:flex!important;gap:8px!important;flex-wrap:wrap!important;align-items:center!important;min-width:0!important}
+    .phaseRow .refreshInline{margin:0!important;justify-self:end!important;align-self:end!important;white-space:nowrap!important}
+    .refreshIcon{display:none}
+    @media(max-width:520px){
+      .phaseRow{display:grid!important;grid-template-columns:1fr auto!important;column-gap:8px!important;row-gap:6px!important;align-items:end!important}
+      .phaseChips{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px!important;width:100%!important;grid-column:1!important;grid-row:1!important}
+      .phaseChips .chip{padding-left:0!important;padding-right:0!important;text-align:center!important}
+      .phaseChips .chip:last-child{grid-column:1 / span 1!important}
+      .phaseRow .refreshInline{
+        grid-column:2!important;
+        grid-row:1!important;
+        align-self:end!important;
+        justify-self:end!important;
+        margin:0!important;
+        width:42px!important;
+        min-width:42px!important;
+        height:38px!important;
+        padding:0!important;
+        display:grid!important;
+        place-items:center!important;
+        border-radius:999px!important;
+        font-size:18px!important;
+        line-height:1!important;
+      }
+      .refreshFull{display:none!important}
+      .refreshIcon{display:inline!important}
+      .nowFieldName{font-size:20px!important}
+      .nowLine{font-size:15px!important}
+      .nowLine .nowTime{font-size:16px!important}
+      .nowPhase{font-size:12px!important}
+    }
+
+
+    /* v1.39: distribución flexible automática de fases + Resultados */
+    .phaseRow{
+      display:flex!important;
+      align-items:center!important;
+      gap:8px!important;
+      flex-wrap:wrap!important;
+    }
+    .phaseChips{
+      display:flex!important;
+      flex-wrap:wrap!important;
+      gap:8px!important;
+      align-items:center!important;
+      flex:1 1 auto!important;
+      min-width:0!important;
+    }
+    .phaseRow .refreshInline{
+      margin-left:auto!important;
+      flex:0 0 auto!important;
+      align-self:center!important;
+    }
+    @media(max-width:520px){
+      .phaseRow{
+        display:flex!important;
+        align-items:center!important;
+        gap:6px!important;
+        flex-wrap:wrap!important;
+      }
+      .phaseChips{
+        display:flex!important;
+        flex-wrap:wrap!important;
+        gap:6px!important;
+        align-items:center!important;
+        flex:1 1 0!important;
+        min-width:0!important;
+      }
+      .phaseChips .chip{
+        flex:0 0 auto!important;
+        padding-left:14px!important;
+        padding-right:14px!important;
+      }
+      .phaseRow .refreshInline{
+        margin-left:auto!important;
+        flex:0 0 auto!important;
+        width:42px!important;
+        min-width:42px!important;
+        height:38px!important;
+        padding:0!important;
+        display:grid!important;
+        place-items:center!important;
+        border-radius:999px!important;
+        font-size:18px!important;
+        line-height:1!important;
+      }
+      .refreshFull{display:none!important}
+      .refreshIcon{display:inline!important}
+    }
+
 </style>
 </head>
 <body>
@@ -798,7 +916,27 @@ function isSoonMatch(m, minutes=60){
   return dt>now && dt<=new Date(now.getTime()+minutes*60000);
 }
 function isNowRelevant(m){return isLiveMatch(m)||isSoonMatch(m,60)}
-function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visiblePhases; $('#dayFilters').classList.add('dayRow'); $('#phaseFilters').classList.add('phaseRow'); $('#dayFilters').innerHTML=`<div class="dayChips">${days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}<button class="chip nowChip ${activeNow?'active':''}" data-now="1">AHORA</button></div>`; $('#phaseFilters').innerHTML=`<div class="phaseChips">${phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join('')}</div><button class="refreshInline" id="dayRefreshBtn" type="button" title="Actualizar resultados" aria-label="Actualizar resultados"><span class="refreshFull">↻ Resultados</span><span class="refreshIcon">↻</span></button>`; $$('[data-day]').forEach(b=>{let d=b.dataset.day; b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||filterPhaseForCalendar(m)===activePhase)); b.onclick=()=>{activeNow=false;activeDay=activeDay===d?null:d; renderCalendar()}}); $$('[data-phase]').forEach(b=>{let p=b.dataset.phase; b.disabled=!matches.some(m=>filterPhaseForCalendar(m)===p&&(!activeDay||m.dayLabel===activeDay)); b.onclick=()=>{activeNow=false;activePhase=activePhase===p?null:p; renderCalendar()}}); const nb=$('[data-now]'); if(nb) nb.onclick=()=>{activeNow=!activeNow;if(activeNow){activeDay=null;activePhase=null;}renderCalendar()}; const rb=$('#dayRefreshBtn'); if(rb) rb.onclick=refreshResults; }
+function filterButtons(){
+  let days=DATA.settings.days, phases=DATA.settings.visiblePhases;
+  $('#dayFilters').classList.add('dayRow');
+  $('#phaseFilters').classList.add('phaseRow');
+  $('#dayFilters').innerHTML=`<div class="dayChips">${days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}<button class="chip nowChip ${activeNow?'active':''}" data-now="1">AHORA</button></div>`;
+  $('#phaseFilters').innerHTML=`<div class="phaseChips">${phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join('')}</div><button class="refreshInline" id="dayRefreshBtn" type="button" title="Actualizar resultados" aria-label="Actualizar resultados"><span class="refreshFull">↻ Resultados</span><span class="refreshIcon">↻</span></button>`;
+  $$('[data-day]').forEach(b=>{
+    let d=b.dataset.day;
+    b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||filterPhaseForCalendar(m)===activePhase));
+    b.onclick=()=>{activeNow=false;activeDay=activeDay===d?null:d;renderCalendar()}
+  });
+  $$('[data-phase]').forEach(b=>{
+    let p=b.dataset.phase;
+    b.disabled=!matches.some(m=>filterPhaseForCalendar(m)===p&&(!activeDay||m.dayLabel===activeDay));
+    b.onclick=()=>{activeNow=false;activePhase=activePhase===p?null:p;renderCalendar()}
+  });
+  const nb=$('[data-now]');
+  if(nb)nb.onclick=()=>{activeNow=!activeNow;if(activeNow){activeDay=null;activePhase=null;}renderCalendar()};
+  const rb=$('#dayRefreshBtn');
+  if(rb)rb.onclick=refreshResults;
+}
 function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
 function formatDG(v){return v>0?'+'+v:String(v)}
