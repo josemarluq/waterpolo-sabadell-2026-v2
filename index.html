@@ -456,6 +456,80 @@
       }
     }
 
+
+    /* v1.35: pulido banner urgente, vista AHORA y botón Resultados */
+    @keyframes clockPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.82)}}
+    .clockDot{display:inline-block;margin-right:6px;animation:clockPulse 1.15s infinite;vertical-align:0}
+    .banner.urgent{
+      background:linear-gradient(135deg,var(--club-main),var(--club-dark))!important;
+      animation:none!important;
+      color:var(--club-text)!important;
+    }
+    .banner.urgent .bannerCenterBox{
+      background:#fffdf0!important;
+      color:#0b5a35!important;
+    }
+    .nowFieldName{
+      font-size:22px!important;
+      font-weight:1000!important;
+      color:#0f172a!important;
+    }
+    .nowLabel{
+      font-size:12px!important;
+      font-weight:900!important;
+      color:#607080!important;
+      text-transform:none!important;
+      letter-spacing:.01em!important;
+    }
+    .nowLine{
+      font-size:17px!important;
+      font-weight:1000!important;
+      color:#0f172a!important;
+    }
+    .nowLine .nowTime{
+      font-size:18px!important;
+      font-weight:1000!important;
+      color:#0f172a!important;
+    }
+    .nowLine .nowPhase{
+      font-size:13px!important;
+      font-weight:500!important;
+      color:#607080!important;
+      margin-left:6px!important;
+    }
+    @media(max-width:520px){
+      .phaseRow{
+        display:grid!important;
+        grid-template-columns:1fr!important;
+      }
+      .phaseChips{
+        display:grid!important;
+        grid-template-columns:repeat(4,1fr)!important;
+        gap:6px!important;
+        width:100%!important;
+      }
+      .phaseChips .chip{
+        padding-left:0!important;
+        padding-right:0!important;
+        text-align:center!important;
+      }
+      .phaseChips .chip:last-child{
+        grid-column:1 / span 1!important;
+      }
+      .phaseRow .refreshInline{
+        justify-self:end!important;
+        margin-left:0!important;
+        margin-top:-54px!important;
+        margin-right:0!important;
+        min-width:145px!important;
+        text-align:center!important;
+      }
+      .nowFieldName{font-size:20px!important}
+      .nowLine{font-size:15px!important}
+      .nowLine .nowTime{font-size:16px!important}
+      .nowLine .nowPhase{font-size:12px!important}
+    }
+
 </style>
 </head>
 <body>
@@ -661,6 +735,13 @@ function renderFieldsNow(){
   }).join('');
   box.innerHTML=`<section class="fieldsNow"><div class="fieldsNowTitle">EN LAS PISCINAS AHORA</div><div class="fieldsGrid">${html}</div></section>`;
 }
+function nicePhaseLabel(m){
+  let label=visiblePhaseLabel(m).toLocaleLowerCase('es-ES');
+  label=label.replace(/^grupo\s+([a-z])$/i,(all,g)=>'Grupo '+g.toLocaleUpperCase('es-ES'));
+  label=label.replace(/\bpuestos\b/g,'puestos');
+  label=label.replace(/\boctavos\b/g,'Octavos').replace(/\bcuartos\b/g,'Cuartos').replace(/\bsemis\b/g,'Semis').replace(/\bfinales\b/g,'Finales');
+  return label.charAt(0).toLocaleUpperCase('es-ES')+label.slice(1);
+}
 function renderNowFieldsView(){
   const now=appNow();
   const fields=[...new Set(matches.map(m=>m.field).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'es'));
@@ -670,8 +751,8 @@ function renderNowFieldsView(){
     const live=list.find(m=>isLiveMatch(m));
     const soon=list.find(m=>isSoonMatch(m,60));
     if(!live && !soon)continue;
-    const liveHtml=live?`<div class="nowBlock"><div class="nowLabel"><span class="liveDot"></span>En juego</div><div class="nowLine"><span class="nowTime">${live.time}</span>${fieldDisplayMatch(live)} <span class="nowPhase">${visiblePhaseLabel(live)}</span></div></div>`:'';
-    const soonHtml=soon?`<div class="nowBlock"><div class="nowLabel">Próximamente</div><div class="nowLine"><span class="nowTime">${soon.time}</span>${fieldDisplayMatch(soon)} <span class="nowPhase">${visiblePhaseLabel(soon)}</span></div></div>`:'';
+    const liveHtml=live?`<div class="nowBlock"><div class="nowLabel"><span class="liveDot"></span>En juego</div><div class="nowLine"><span class="nowTime">${live.time}</span>${fieldDisplayMatch(live)} <span class="nowPhase">(${nicePhaseLabel(live)})</span></div></div>`:'';
+    const soonHtml=soon?`<div class="nowBlock"><div class="nowLabel">⏰ Próximamente</div><div class="nowLine"><span class="nowTime">${soon.time}</span>${fieldDisplayMatch(soon)} <span class="nowPhase">(${nicePhaseLabel(soon)})</span></div></div>`:'';
     cards.push(`<article class="nowFieldCard"><div class="nowFieldHead"><span class="nowFieldName">${field}</span></div>${liveHtml}${soonHtml}</article>`);
   }
   return cards.length?`<section class="nowFieldsView">${cards.join('')}</section>`:'<p class="muted">No hay partidos en juego ni próximos en la siguiente hora.</p>';
@@ -773,7 +854,7 @@ function renderBanner(){
     if(mode==='auto'){ if(diff<=0&&diff>-40*60000)mode='live'; else if(diff>0&&diff<60*60000)mode='urgent'; else mode='normal'; }
     if(simMode!=='auto')cls+=' test'; if(mode==='urgent')cls+=' urgent'; if(mode==='live')cls+=' live';
     let a=displayRefConfirmed(pending.teamA), b=displayRefConfirmed(pending.teamB);
-    let title=mode==='live'?`<span class="liveDot"></span>EN JUEGO ${up(shortTeamName(mt))}`:mode==='urgent'?`FALTAN ${Math.max(0,mins)} MIN · ${up(shortTeamName(mt))}`:`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`;
+    let title=mode==='live'?`<span class="liveDot"></span>EN JUEGO ${up(shortTeamName(mt))}`:mode==='urgent'?`<span class="clockDot">⏰</span>FALTAN ${Math.max(0,mins)} MIN · ${up(shortTeamName(mt))}`:`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`;
     let box=mode==='live'?`<div class="date">EN JUEGO</div><div class="time">${pending.time}</div><div class="field">${pending.field}</div>`:`<div class="date">${dayText(dt, now)}</div><div class="time">${pending.time}</div><div class="field">${pending.field}</div>`;
     html=`<div class="bannerCompactTop"><span class="bannerInfo">${bannerPhaseLabel(pending)}</span><small>${title}</small><span class="bannerSpacer"></span></div><div class="bannerTeams"><div class="bannerTeam"><img class="crest big" src="${a.id?logo(teams[a.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(displayNameShort(a))}</div></div><div class="bannerCenterBox">${box}</div><div class="bannerTeam"><img class="crest big" src="${b.id?logo(teams[b.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(displayNameShort(b))}</div></div></div>`;
   }
