@@ -368,6 +368,15 @@
       .penaltyScoreWrap{min-width:60px}
     }
 
+
+    /* v1.29: filtro AHORA y bolita verde intermitente en partidos en juego */
+    @keyframes liveDotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.72)}}
+    @keyframes liveCardPulse{0%,100%{box-shadow:0 8px 22px rgba(22,101,52,.18)}50%{box-shadow:0 8px 28px rgba(22,101,52,.38)}}
+    .liveDot{display:inline-block;width:9px;height:9px;border-radius:999px;background:#22c55e;margin-right:6px;vertical-align:1px;animation:liveDotPulse 1.15s infinite;box-shadow:0 0 0 3px rgba(34,197,94,.14)}
+    .card.liveMatch{border:2px solid #22c55e!important;border-left:9px solid #16a34a!important;animation:liveCardPulse 1.8s infinite;background:linear-gradient(90deg,#ecfdf5 0%,#ffffff 70%)!important}
+    .liveLabel{display:inline-flex;align-items:center;font-weight:1000;color:#166534;background:#dcfce7;border:1px solid #86efac;border-radius:999px;padding:5px 9px;white-space:nowrap;font-size:12px}
+    .chip.nowChip.active{background:#dcfce7!important;border-color:#22c55e!important;color:#166534!important}
+
 </style>
 </head>
 <body>
@@ -375,7 +384,7 @@
   <header class="top"><img class="appLogo" src="icon-192.png" alt="SBD 2026"><div class="title"><h1 id="appTitle">Waterpolo</h1><p id="appSub">Cargando campeonato…</p></div><div class="headerActions"><button class="adminBtn" id="openAdmin" aria-label="Admin">⋯</button></div></header>
   <section id="banner" class="banner"><small>PRÓXIMO PARTIDO</small><h2>Cargando…</h2></section>
   <main>
-    <section id="calendar" class="panel active"><div id="fieldsNowBox"></div><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="calendarList"></div></section>
+    <section id="calendar" class="panel active"><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="calendarList"></div></section>
     <section id="search" class="panel"><h3 class="sectionTitle">BUSCA POR EQUIPO O GRUPO</h3><select id="teamSelect"></select><div id="teamMatches"></div></section>
     <section id="groups" class="panel"><h3 class="sectionTitle">CLASIFICACIÓN DE GRUPOS</h3><div id="groupsBox" class="gridGroups"></div></section>
     <section id="finals" class="panel"><h3 class="sectionTitle">CLASIFICACIÓN FINAL</h3><div id="placesBox" class="places"></div></section>
@@ -385,7 +394,7 @@
 <div class="admin" id="admin"><div class="adminBox"><h2>Ajustes</h2><section class="favoriteBox"><h3>Elige equipo favorito</h3><p class="status">El banner, el resaltado y la búsqueda se centrarán en este equipo.</p><select id="mainTeamSelect"></select></section><details class="advancedBox"><summary>Configuración avanzada</summary><label>URL Apps Script</label><input id="urlInput"><div class="btnRow"><button class="btn" id="saveUrl">Guardar URL</button></div><h3>Herramientas</h3><div class="btnRow"><button class="btn danger" id="clearBtn">Borrar resultados locales</button></div><p id="updateStatus" class="status"></p><h3>Simulador banner</h3><div class="btnRow"><button class="btn secondary" data-sim="normal">Estado normal</button><button class="btn secondary" data-sim="urgent">Falta &lt; 1 hora</button><button class="btn secondary" data-sim="live">En juego</button><button class="btn secondary" data-sim="auto">Volver automático</button></div></details><div class="btnRow"><button class="btn secondary" id="closeAdmin">Cerrar</button></div></div></div>
 <script>
 const LS={url:'wp_apps_url', main:'wp_main_team', results:'wp_results', status:'wp_status'};
-let DATA, teams={}, matches=[], results={}, ranks={}, activeDay=null, activePhase=null, simMode='auto';
+let DATA, teams={}, matches=[], results={}, ranks={}, activeDay=null, activePhase=null, activeNow=false, simMode='auto';
 function groupsMap(){
   if(!DATA||!DATA.groups)return {};
   if(Array.isArray(DATA.groups)) return Object.fromEntries(DATA.groups.map(g=>[g.id,g.teams||[]]));
@@ -524,8 +533,19 @@ function updateQuickRefreshVisibility(tab){
 }
 
 function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); $('#banner').style.display=b.dataset.tab==='calendar'?'':'none'; if(b.dataset.tab==='search')renderTeamMatches(); }); $('#banner').style.display=''; $('#openAdmin').onclick=()=>{ const adv=document.querySelector('.advancedBox'); if(adv) adv.removeAttribute('open'); $('#admin').classList.add('open'); }; $('#admin').addEventListener('click',e=>{if(e.target===$('#admin'))$('#admin').classList.remove('open');}); $('#closeAdmin').onclick=()=>$('#admin').classList.remove('open'); $('#urlInput').value=localStorage.getItem(LS.url)||''; $('#saveUrl').onclick=()=>{localStorage.setItem(LS.url,$('#urlInput').value.trim()); setStatus('URL guardada.');}; const teamOpts=DATA.teams.slice().sort((a,b)=>shortTeamName(a.id).localeCompare(shortTeamName(b.id),'es')).map(t=>`<option value="${t.id}">${up(shortTeamName(t.id))}</option>`).join(''); const groupOpts=groupIds().map(g=>`<option value="GROUP_${g}">PARTIDOS GRUPO ${g}</option>`).join(''); $('#teamSelect').innerHTML=`<optgroup label="Equipos">${teamOpts}</optgroup><optgroup label="Grupos">${groupOpts}</optgroup>`; $('#mainTeamSelect').innerHTML=teamOpts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; if($('#clearBtn')) $('#clearBtn').onclick=clearResults; $$('[data-sim]').forEach(b=>b.onclick=()=>{simMode=b.dataset.sim; renderBanner();}); }
-function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visiblePhases; $('#dayFilters').classList.add('dayRow'); $('#dayFilters').innerHTML=`<div class="dayChips">${days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}</div><button class="refreshInline" id="dayRefreshBtn" type="button">↻ Actualizar</button>`; $('#phaseFilters').innerHTML=phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join(''); $$('[data-day]').forEach(b=>{let d=b.dataset.day; b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||filterPhaseForCalendar(m)===activePhase)); b.onclick=()=>{activeDay=activeDay===d?null:d; renderCalendar()}}); $$('[data-phase]').forEach(b=>{let p=b.dataset.phase; b.disabled=!matches.some(m=>filterPhaseForCalendar(m)===p&&(!activeDay||m.dayLabel===activeDay)); b.onclick=()=>{activePhase=activePhase===p?null:p; renderCalendar()}}); const rb=$('#dayRefreshBtn'); if(rb) rb.onclick=refreshResults; }
-function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderFieldsNow(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
+function isLiveMatch(m){
+  if(hasResult(m.id))return false;
+  const now=new Date(), dt=dateTime(m);
+  return now>=dt && now<new Date(dt.getTime()+40*60000);
+}
+function isSoonMatch(m, minutes=60){
+  if(hasResult(m.id))return false;
+  const now=new Date(), dt=dateTime(m);
+  return dt>now && dt<=new Date(now.getTime()+minutes*60000);
+}
+function isNowRelevant(m){return isLiveMatch(m)||isSoonMatch(m,60)}
+function filterButtons(){ let days=DATA.settings.days, phases=DATA.settings.visiblePhases; $('#dayFilters').classList.add('dayRow'); $('#dayFilters').innerHTML=`<div class="dayChips">${days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}<button class="chip nowChip ${activeNow?'active':''}" data-now="1">AHORA</button></div><button class="refreshInline" id="dayRefreshBtn" type="button">↻ Actualizar</button>`; $('#phaseFilters').innerHTML=phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join(''); $$('[data-day]').forEach(b=>{let d=b.dataset.day; b.disabled=activeNow||!matches.some(m=>m.dayLabel===d&&(!activePhase||filterPhaseForCalendar(m)===activePhase)); b.onclick=()=>{activeNow=false;activeDay=activeDay===d?null:d; renderCalendar()}}); $$('[data-phase]').forEach(b=>{let p=b.dataset.phase; b.disabled=activeNow||!matches.some(m=>filterPhaseForCalendar(m)===p&&(!activeDay||m.dayLabel===activeDay)); b.onclick=()=>{activeNow=false;activePhase=activePhase===p?null:p; renderCalendar()}}); const nb=$('[data-now]'); if(nb) nb.onclick=()=>{activeNow=!activeNow;if(activeNow){activeDay=null;activePhase=null;}renderCalendar()}; const rb=$('#dayRefreshBtn'); if(rb) rb.onclick=refreshResults; }
+function renderAll(){ applyTeamTheme(); compute(); filterButtons(); renderBanner(); renderCalendar(); renderSelectors(); renderTeamMatches(); renderGroups(); renderFinals(); }
 function renderSelectors(){ $('#mainTeamSelect').value=mainTeam(); }
 function formatDG(v){return v>0?'+'+v:String(v)}
 function fieldDisplayMatch(m){
@@ -554,7 +574,7 @@ function renderFieldsNow(){
   }).join('');
   box.innerHTML=`<section class="fieldsNow"><div class="fieldsNowTitle">EN LAS PISCINAS AHORA</div><div class="fieldsGrid">${html}</div></section>`;
 }
-function renderCalendar(){ filterButtons(); let list=matches.filter(m=>(!activeDay||m.dayLabel===activeDay)&&(!activePhase||filterPhaseForCalendar(m)===activePhase)); $('#calendarList').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con esos filtros.</p>'; }
+function renderCalendar(){ filterButtons(); let list=matches.filter(m=>activeNow?isNowRelevant(m):((!activeDay||m.dayLabel===activeDay)&&(!activePhase||filterPhaseForCalendar(m)===activePhase))); $('#calendarList').innerHTML=list.map(matchCard).join('')||(activeNow?'<p class="muted">No hay partidos en juego ni próximos en la siguiente hora.</p>':'<p class="muted">No hay partidos con esos filtros.</p>'); }
 function displayNameShort(d){return d.id?shortTeamName(d.id):d.name}
 function teamBlock(ref, side){let d=displayRefConfirmed(ref), t=teams[d.id]; let img=`<img class="crest" src="${d.id?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}">`; let name=`<div class="teamName">${up(displayNameShort(d))}</div>`; return `<div class="team ${side==='right'?'right':'left'}">${side==='right'?img+name:name+img}</div>`}
 function visiblePhaseLabel(m){
@@ -592,8 +612,12 @@ function centerBox(m){
   return `<div class="centerBox"><div class="date">${dayText(dateTime(m), new Date())}</div><div class="time">${m.time}</div><div class="field">${m.field}</div></div>`;
 }
 function matchCard(m){
-  let a=displayRefConfirmed(m.teamA).id, b=displayRefConfirmed(m.teamB).id, cls=(isMain(a)||isMain(b))?' mainTeam':'';
-  return `<article class="card${cls}"><div class="matchTop"><span class="phaseLabel">${visiblePhaseLabel(m)}</span><span class="codeLabel">PARTIDO ${m.id}</span></div><div class="teams">${teamBlock(m.teamA,'left')}<div class="score">${centerBox(m)}</div>${teamBlock(m.teamB,'right')}</div></article>`;
+  let a=displayRefConfirmed(m.teamA).id, b=displayRefConfirmed(m.teamB).id;
+  let live=isLiveMatch(m);
+  let cls=(isMain(a)||isMain(b))?' mainTeam':'';
+  if(live)cls+=' liveMatch';
+  let phase=live?`<span class="liveLabel"><span class="liveDot"></span>EN JUEGO</span>`:`<span class="phaseLabel">${visiblePhaseLabel(m)}</span>`;
+  return `<article class="card${cls}"><div class="matchTop">${phase}<span class="codeLabel">PARTIDO ${m.id}</span></div><div class="teams">${teamBlock(m.teamA,'left')}<div class="score">${centerBox(m)}</div>${teamBlock(m.teamB,'right')}</div></article>`;
 }
 function renderTeamMatches(){let val=$('#teamSelect').value||mainTeam(); let list=[]; if(String(val).startsWith('GROUP_')){let g=String(val).replace('GROUP_',''); list=matches.filter(m=>m.phase==='GRUPOS'&&m.group===g);}else{let id=val; list=matches.filter(m=>resolveTeamConfirmed(m.teamA)===id||resolveTeamConfirmed(m.teamB)===id);} $('#teamMatches').innerHTML=list.map(matchCard).join('')||'<p class="muted">No hay partidos con ese filtro.</p>';}
 function refCouldBecome(ref,id){ if(ref.team)return ref.team===id; if(ref.groupRank)return groupTeams(ref.groupRank.group).includes(id); if(ref.winner||ref.loser){let m=matchById(ref.winner||ref.loser); return m&&(refCouldBecome(m.teamA,id)||refCouldBecome(m.teamB,id));} return false;}
@@ -639,7 +663,7 @@ function renderBanner(){
     if(mode==='auto'){ if(diff<=0&&diff>-40*60000)mode='live'; else if(diff>0&&diff<60*60000)mode='urgent'; else mode='normal'; }
     if(simMode!=='auto')cls+=' test'; if(mode==='urgent')cls+=' urgent'; if(mode==='live')cls+=' live';
     let a=displayRefConfirmed(pending.teamA), b=displayRefConfirmed(pending.teamB);
-    let title=mode==='live'?`EN JUEGO ${up(shortTeamName(mt))}`:mode==='urgent'?`FALTAN ${Math.max(0,mins)} MIN · ${up(shortTeamName(mt))}`:`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`;
+    let title=mode==='live'?`<span class="liveDot"></span>EN JUEGO ${up(shortTeamName(mt))}`:mode==='urgent'?`FALTAN ${Math.max(0,mins)} MIN · ${up(shortTeamName(mt))}`:`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`;
     let box=mode==='live'?`<div class="date">EN JUEGO</div><div class="time">${pending.time}</div><div class="field">${pending.field}</div>`:`<div class="date">${dayText(dt, now)}</div><div class="time">${pending.time}</div><div class="field">${pending.field}</div>`;
     html=`<div class="bannerCompactTop"><span class="bannerInfo">${bannerPhaseLabel(pending)}</span><small>${title}</small><span class="bannerSpacer"></span></div><div class="bannerTeams"><div class="bannerTeam"><img class="crest big" src="${a.id?logo(teams[a.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(displayNameShort(a))}</div></div><div class="bannerCenterBox">${box}</div><div class="bannerTeam"><img class="crest big" src="${b.id?logo(teams[b.id]):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="bannerTeamName">${up(displayNameShort(b))}</div></div></div>`;
   }
