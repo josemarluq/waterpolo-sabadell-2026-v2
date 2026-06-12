@@ -877,7 +877,7 @@
 <nav class="tabs"><div class="tabsInner"><button class="tab active" data-tab="calendar">Calendario</button><button class="tab" data-tab="search">Búsqueda</button><button class="tab" data-tab="groups">Grupos</button><button class="tab" data-tab="finals">Clasificación</button></div></nav>
 <div class="admin" id="admin"><div class="adminBox"><h2>Ajustes</h2>
 <section class="favoriteBox"><h3>Ajustes básicos</h3><div class="adminGrid"><div><label>Equipo favorito</label><p class="status">El banner, el resaltado y la búsqueda se centrarán en este equipo.</p><select id="mainTeamSelect"></select></div><div><label>Actualización automática</label><p class="status">Doble toque en el logo SBD para actualizar manualmente.</p><select id="autoRefreshSelect"><option value="0">Nunca</option><option value="1">Cada 1 minuto</option><option value="5">Cada 5 minutos</option><option value="10">Cada 10 minutos</option><option value="15">Cada 15 minutos</option><option value="30">Cada 30 minutos</option></select></div><div class="lastUpdateCard"><div class="label">Última actualización de resultados</div><div class="value" id="lastUpdateBasic">—</div></div></div></section>
-<section class="advancedBox" id="advancedBox"><div id="advancedContent" class="advancedContent locked"><div class="adminSection"><h3>Versiones</h3><p class="status">Versión app: <strong>v1.50</strong></p><p class="status">Versión JSON/calendario: <strong>calendario definitivo 12-jun-26</strong></p></div><div class="adminSection"><h3>Resultados</h3><div class="modeBox" id="resultsModeBox"><div class="modeLine"><div><label for="resultsModeSelect">Fuente de resultados</label><p class="status">Campeonato lee la hoja REAL. Pruebas lee la hoja TEST sólo en este dispositivo.</p></div><span class="modeBadge" id="resultsModeBadge">REAL</span></div><select id="resultsModeSelect"><option value="real">Campeonato / REAL</option><option value="test">Pruebas / TEST</option></select></div><div class="btnRow"><button class="btn danger" id="clearBtn">Borrar resultados locales</button></div><p id="updateStatus" class="status"></p></div><div class="adminSection"><h3>Tests de tiempos</h3><p class="status">Para probar AHORA, EN JUEGO y el banner durante el torneo.</p><div class="miniAdminTitle">Simular fecha/hora</div><input id="simTimeInput" type="datetime-local"><div class="btnRow"><button class="btn secondary" id="setSimTime">Usar fecha/hora simulada</button><button class="btn secondary" id="clearSimTime">Volver a hora real</button></div><p id="simTimeStatus" class="status"></p><div class="adminDivider"></div><div class="miniAdminTitle">Simulador banner</div><div class="btnRow"><button class="btn secondary" data-sim="normal">Estado normal</button><button class="btn secondary" data-sim="urgent">Falta &lt; 1 hora</button><button class="btn secondary" data-sim="live">En juego</button><button class="btn secondary" data-sim="auto">Volver automático</button></div></div></div></section><div class="btnRow"><button class="btn secondary" id="closeAdmin">Cerrar</button></div></div></div>
+<section class="advancedBox" id="advancedBox"><div id="advancedContent" class="advancedContent locked"><div class="adminSection"><h3>Versiones</h3><p class="status">Versión app: <strong>v1.51</strong></p><p class="status">Versión JSON/calendario: <strong>calendario definitivo 12-jun-26</strong></p></div><div class="adminSection"><h3>Resultados</h3><div class="modeBox" id="resultsModeBox"><div class="modeLine"><div><label for="resultsModeSelect">Fuente de resultados</label><p class="status">Campeonato lee la hoja REAL. Pruebas lee la hoja TEST sólo en este dispositivo.</p></div><span class="modeBadge" id="resultsModeBadge">REAL</span></div><select id="resultsModeSelect"><option value="real">Campeonato / REAL</option><option value="test">Pruebas / TEST</option></select></div><div class="btnRow"><button class="btn danger" id="clearBtn">Borrar resultados locales</button></div><p id="updateStatus" class="status"></p></div><div class="adminSection"><h3>Tests de tiempos</h3><p class="status">Para probar AHORA, EN JUEGO y el banner durante el torneo.</p><div class="miniAdminTitle">Simular fecha/hora</div><input id="simTimeInput" type="datetime-local"><div class="btnRow"><button class="btn secondary" id="setSimTime">Usar fecha/hora simulada</button><button class="btn secondary" id="clearSimTime">Volver a hora real</button></div><p id="simTimeStatus" class="status"></p><div class="adminDivider"></div><div class="miniAdminTitle">Simulador banner</div><div class="btnRow"><button class="btn secondary" data-sim="normal">Estado normal</button><button class="btn secondary" data-sim="urgent">Falta &lt; 1 hora</button><button class="btn secondary" data-sim="live">En juego</button><button class="btn secondary" data-sim="auto">Volver automático</button></div></div></div></section><div class="btnRow"><button class="btn secondary" id="closeAdmin">Cerrar</button></div></div></div>
 <script>
 const REAL_APPS_SCRIPT_URL='https://script.google.com/macros/s/AKfycbxSwfOyx22o57V4iaUShyWA7272Hk9awVk1NzGDw-GrRsNdB-CLRhQNZY3coyKp1T0ssw/exec';
 const LS={url:'wp_apps_url', main:'wp_main_team', results:'wp_results', resultsReal:'wp_results_real', resultsTest:'wp_results_test', status:'wp_status', auto:'wp_auto_refresh_min', last:'wp_last_update', lastReal:'wp_last_update_real', lastTest:'wp_last_update_test', resultMode:'wp_results_mode'};
@@ -1047,6 +1047,18 @@ function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel'
   const savedSim=localStorage.getItem('wp_sim_now')||'';
   if(savedSim){simNow=savedSim; const si=$('#simTimeInput'); if(si)si.value=toDateTimeLocalValue(new Date(savedSim)); const st=$('#simTimeStatus'); if(st)st.textContent='Simulando: '+new Date(savedSim).toLocaleString('es-ES');}
  const teamOpts=DATA.teams.slice().sort((a,b)=>shortTeamName(a.id).localeCompare(shortTeamName(b.id),'es')).map(t=>`<option value="${t.id}">${up(shortTeamName(t.id))}</option>`).join(''); const groupOpts=groupIds().map(g=>`<option value="GROUP_${g}">PARTIDOS GRUPO ${g}</option>`).join(''); $('#teamSelect').innerHTML=`<optgroup label="Equipos">${teamOpts}</optgroup><optgroup label="Grupos">${groupOpts}</optgroup>`; $('#mainTeamSelect').innerHTML=teamOpts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; if($('#clearBtn')) $('#clearBtn').onclick=clearResults;
+  const modeSel=$('#resultsModeSelect');
+  if(modeSel){
+    updateResultsModeUI();
+    modeSel.onchange=e=>{
+      localStorage.setItem(LS.resultMode,e.target.value==='test'?'test':'real');
+      loadSaved();
+      compute();
+      updateLastUpdateUI();
+      renderAll();
+      setStatus(`Fuente cambiada a ${activeResultsMode()==='test'?'TEST':'REAL'}. Pulsa actualizar resultados para leer esa hoja.`);
+    };
+  }
   const setSim=$('#setSimTime'), clearSim=$('#clearSimTime');
   if(setSim) setSim.onclick=()=>{let v=$('#simTimeInput').value;if(!v){const st=$('#simTimeStatus'); if(st)st.textContent='Elige fecha y hora.'; return;} simNow=v; localStorage.setItem('wp_sim_now',simNow); const st=$('#simTimeStatus'); if(st)st.textContent='Simulando: '+new Date(simNow).toLocaleString('es-ES'); renderAll();};
   if(clearSim) clearSim.onclick=()=>{simNow=null; localStorage.removeItem('wp_sim_now'); const st=$('#simTimeStatus'); if(st)st.textContent='Usando hora real.'; renderAll();};
@@ -1277,12 +1289,28 @@ let autoRefreshTimer=null;
 function formatUpdateStamp(d=new Date()){
   return d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit'})+' · '+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
 }
+function updateResultsModeUI(){
+  const mode=activeResultsMode();
+  const sel=$('#resultsModeSelect');
+  const badge=$('#resultsModeBadge');
+  const box=$('#resultsModeBox');
+  if(sel) sel.value=mode;
+  if(badge){
+    badge.textContent=mode==='test'?'TEST':'REAL';
+    badge.className='modeBadge '+(mode==='test'?'test':'real');
+  }
+  if(box){
+    box.classList.toggle('test',mode==='test');
+  }
+}
 function updateLastUpdateUI(){
-  const saved=localStorage.getItem(LS.last);
+  const saved=localStorage.getItem(lastUpdateKey());
+  const mode=activeResultsMode()==='test'?'TEST':'REAL';
   const basic=$('#lastUpdateBasic');
-  if(basic) basic.textContent=saved||'—';
+  if(basic) basic.textContent=saved?`${saved} · ${mode}`:'—';
   const small=$('#lastUpdateSmall');
-  if(small) small.textContent=saved?'Act. '+saved:'Act. —';
+  if(small) small.textContent=saved?`Act. ${saved} · ${mode}`:'Act. —';
+  updateResultsModeUI();
 }
 function showRefreshToast(msg, ms=1400){
   const el=$('#refreshToast');
