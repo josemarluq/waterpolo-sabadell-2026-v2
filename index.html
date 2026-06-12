@@ -391,6 +391,21 @@
     .nowTeams{font-size:14px;font-weight:1000;line-height:1.18}
     .nowMeta{font-size:11px;color:#607080;font-weight:800;margin-top:4px}
 
+
+    /* v1.32: vista AHORA más compacta y botón actualizar reubicado en móvil */
+    .nowFieldTag{display:none!important}
+    .nowBlock{padding-top:7px!important;margin-top:7px!important}
+    .nowLine{font-size:14px;font-weight:1000;line-height:1.25}
+    .nowLine .nowTime{font-weight:1000;color:#1f2937;margin-right:6px}
+    .nowLine .nowPhase{font-weight:800;color:#607080;margin-left:6px}
+    .nowLabel{margin-bottom:3px!important}
+    @media(max-width:520px){
+      .filters.dayRow .dayChips{display:grid!important;grid-template-columns:repeat(5,1fr)!important;width:100%!important;flex:1 1 100%!important}
+      .filters.dayRow .dayChips .chip{padding-left:0!important;padding-right:0!important;text-align:center}
+      .filters.dayRow{display:grid!important;grid-template-columns:1fr!important}
+      .refreshInline{justify-self:end!important;margin-left:0!important;margin-top:-2px!important}
+    }
+
 </style>
 </head>
 <body>
@@ -605,9 +620,9 @@ function renderNowFieldsView(){
     const live=list.find(m=>isLiveMatch(m));
     const soon=list.find(m=>isSoonMatch(m,60));
     if(!live && !soon)continue;
-    const liveHtml=live?`<div class="nowBlock"><div class="nowLabel"><span class="liveDot"></span>En juego</div><div class="nowTeams">${fieldDisplayMatch(live)}</div><div class="nowMeta">${live.time} · ${visiblePhaseLabel(live)}</div></div>`:'';
-    const soonHtml=soon?`<div class="nowBlock"><div class="nowLabel">Próximamente</div><div class="nowTeams">${fieldDisplayMatch(soon)}</div><div class="nowMeta">${soon.time} · ${visiblePhaseLabel(soon)}</div></div>`:'';
-    cards.push(`<article class="nowFieldCard"><div class="nowFieldHead"><span class="nowFieldName">${field}</span><span class="nowFieldTag ${live?'live':''}">${live?'EN JUEGO':'PRÓXIMO'}</span></div>${liveHtml}${soonHtml}</article>`);
+    const liveHtml=live?`<div class="nowBlock"><div class="nowLabel"><span class="liveDot"></span>En juego</div><div class="nowLine"><span class="nowTime">${live.time}</span>${fieldDisplayMatch(live)} <span class="nowPhase">${visiblePhaseLabel(live)}</span></div></div>`:'';
+    const soonHtml=soon?`<div class="nowBlock"><div class="nowLabel">Próximamente</div><div class="nowLine"><span class="nowTime">${soon.time}</span>${fieldDisplayMatch(soon)} <span class="nowPhase">${visiblePhaseLabel(soon)}</span></div></div>`:'';
+    cards.push(`<article class="nowFieldCard"><div class="nowFieldHead"><span class="nowFieldName">${field}</span></div>${liveHtml}${soonHtml}</article>`);
   }
   return cards.length?`<section class="nowFieldsView">${cards.join('')}</section>`:'<p class="muted">No hay partidos en juego ni próximos en la siguiente hora.</p>';
 }
