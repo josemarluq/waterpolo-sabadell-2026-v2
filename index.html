@@ -825,11 +825,23 @@
       line-height:1!important;
     }
 
+
+    /* v1.44: versión visible entre encabezado y banner */
+    .versionLine{
+      margin:2px 2px 8px;
+      font-size:10px;
+      color:#8a97a6;
+      font-weight:700;
+      line-height:1.1;
+      text-align:left;
+    }
+
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top"><img class="appLogo" src="icon-192.png" alt="SBD 2026"><div class="title"><h1 id="appTitle">Waterpolo</h1><p id="appSub">Cargando campeonato…</p></div><div class="headerActions"><button class="adminBtn" id="openAdmin" aria-label="Admin">⋯</button></div></header>
+  <div id="versionLine" class="versionLine">Versión v1.44 · autoactualización y estado de resultados</div>
   <div id="refreshToast" class="refreshToast"></div><section id="banner" class="banner"><small>PRÓXIMO PARTIDO</small><h2>Cargando…</h2></section>
   <main>
     <section id="calendar" class="panel active"><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="lastUpdateSmall" class="lastUpdateSmall calendarUpdate">Act. —</div><div id="calendarList"></div></section>
