@@ -23,12 +23,12 @@
     {
       "id": "BRAINS",
       "name": "COLEGIO BRAINS",
-      "logo": "brains.png"
+      "logo": "colegio_brains.png"
     },
     {
       "id": "BARCELONETA",
       "name": "C.N. ATLETIC-BARCELONETA",
-      "logo": "barceloneta.png"
+      "logo": "cn_atletic_barceloneta.png"
     },
     {
       "id": "ASKARTZA",
@@ -38,92 +38,92 @@
     {
       "id": "MALAGA",
       "name": "C.D.W. MALAGA",
-      "logo": "malaga.png"
+      "logo": "cdw_malaga.png"
     },
     {
       "id": "MORVEDRE",
       "name": "C.N.A. MORVEDRE SAGUNTO",
-      "logo": "morvedre.png"
+      "logo": "cna_morvedre_sagunto.png"
     },
     {
       "id": "CABALLA",
       "name": "C.N. CABALLA - CIUDAD DE CEUTA",
-      "logo": "caballa.png"
+      "logo": "cn_caballa.png"
     },
     {
       "id": "HELIOS",
       "name": "C.N. HELIOS",
-      "logo": "helios.png"
+      "logo": "cn_helios.png"
     },
     {
       "id": "LAS_PALMAS",
       "name": "C.N. LAS PALMAS",
-      "logo": "las_palmas.png"
+      "logo": "cn_las_palmas.png"
     },
     {
       "id": "SOLLER",
       "name": "ESPORTS AQUATICS SOLLER WP",
-      "logo": "soller.png"
+      "logo": "esports_aquatics_soller_wp.png"
     },
     {
       "id": "NAVARRA",
       "name": "C.D.W. NAVARRA",
-      "logo": "navarra.png"
+      "logo": "cdw_navarra.png"
     },
     {
       "id": "CARTHAGO",
       "name": "C.W. CARTHAGO",
-      "logo": "carthago.png"
+      "logo": "cw_carthago.png"
     },
     {
       "id": "HORTA",
       "name": "U.E. HORTA",
-      "logo": "horta.png"
+      "logo": "ue_horta.png"
     },
     {
       "id": "TENERIFE_ECHEYDE",
       "name": "TENERIFE ECHEYDE",
-      "logo": "echeyde.png"
+      "logo": "can_tenerife_echeyde.png"
     },
     {
       "id": "OLIVAR",
       "name": "E.M. EL OLIVAR",
-      "logo": "olivar.png"
+      "logo": "em_el_olivar.png"
     },
     {
       "id": "TURIA",
       "name": "C.D.W. TURIA",
-      "logo": "turia.png"
+      "logo": "cdw_turia.png"
     },
     {
       "id": "ALGECIRAS",
       "name": "C.W. ALGECIRAS",
-      "logo": "algeciras.png"
+      "logo": "cw_algeciras.png"
     },
     {
       "id": "LEIOA",
       "name": "LEIOA WP",
-      "logo": "leioa.png"
+      "logo": "leioa_wp.png"
     },
     {
       "id": "TRUDGEON_SESTAO",
       "name": "CDW TRUDGEON SESTAO",
-      "logo": "sestao.png"
+      "logo": "cdw_trudgeon_sestao.png"
     },
     {
       "id": "SABADELL",
       "name": "C.N. SABADELL",
-      "logo": "sabadell.png"
+      "logo": "cn_sabadell.png"
     },
     {
       "id": "MEDITERRANI",
       "name": "C.E. MEDITERRANI",
-      "logo": "mediterrani.png"
+      "logo": "ce_mediterrani.png"
     },
     {
       "id": "ALCORCON",
       "name": "C.N. CIUDAD DE ALCORCON",
-      "logo": "alcorcon.png"
+      "logo": "cn_ciudad_de_alcorcon.png"
     },
     {
       "id": "ENCINAS",
@@ -133,12 +133,12 @@
     {
       "id": "CANOE",
       "name": "REAL CANOE N.C.",
-      "logo": "canoe.png"
+      "logo": "real_canoe.png"
     },
     {
       "id": "BARCELONA",
       "name": "C.N. BARCELONA",
-      "logo": "barcelona.png"
+      "logo": "cn_barcelona.png"
     }
   ],
   "groups": {
