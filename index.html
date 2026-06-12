@@ -741,6 +741,46 @@
       .refreshIcon{display:inline!important}
     }
 
+
+    /* v1.40: Resultados integrado en la fila flexible de fases */
+    .phaseRow{display:block!important}
+    .phaseChips{
+      display:flex!important;
+      flex-wrap:wrap!important;
+      gap:8px!important;
+      align-items:center!important;
+      width:100%!important;
+    }
+    .phaseChips .refreshInline{
+      margin-left:auto!important;
+      flex:0 0 auto!important;
+    }
+    .refreshIcon{display:none}
+    @media(max-width:520px){
+      .phaseChips{gap:6px!important}
+      .phaseChips .chip{
+        flex:0 0 auto!important;
+        padding-left:14px!important;
+        padding-right:14px!important;
+      }
+      .phaseChips .refreshInline{
+        margin-left:auto!important;
+        width:42px!important;
+        min-width:42px!important;
+        height:38px!important;
+        padding:0!important;
+        display:grid!important;
+        place-items:center!important;
+        border-radius:999px!important;
+        font-size:18px!important;
+        line-height:1!important;
+        overflow:hidden!important;
+        white-space:nowrap!important;
+      }
+      .refreshFull{display:none!important}
+      .refreshIcon{display:inline!important}
+    }
+
 </style>
 </head>
 <body>
@@ -755,7 +795,7 @@
   </main>
 </div>
 <nav class="tabs"><div class="tabsInner"><button class="tab active" data-tab="calendar">Calendario</button><button class="tab" data-tab="search">Búsqueda</button><button class="tab" data-tab="groups">Grupos</button><button class="tab" data-tab="finals">Clasificación</button></div></nav>
-<div class="admin" id="admin"><div class="adminBox"><h2>Ajustes</h2><section class="favoriteBox"><h3>Elige equipo favorito</h3><p class="status">El banner, el resaltado y la búsqueda se centrarán en este equipo.</p><select id="mainTeamSelect"></select></section><details class="advancedBox"><summary>Configuración avanzada</summary><label>URL Apps Script</label><input id="urlInput"><div class="btnRow"><button class="btn" id="saveUrl">Guardar URL</button></div><h3>Herramientas</h3><div class="btnRow"><button class="btn danger" id="clearBtn">Borrar resultados locales</button></div><p id="updateStatus" class="status"></p><h3>Simular fecha/hora</h3><p class="status">Para probar AHORA, EN JUEGO y el banner durante el torneo.</p><input id="simTimeInput" type="datetime-local"><div class="btnRow"><button class="btn secondary" id="setSimTime">Usar fecha/hora simulada</button><button class="btn secondary" id="clearSimTime">Volver a hora real</button></div><p id="simTimeStatus" class="status"></p><h3>Simulador banner</h3><div class="btnRow"><button class="btn secondary" data-sim="normal">Estado normal</button><button class="btn secondary" data-sim="urgent">Falta &lt; 1 hora</button><button class="btn secondary" data-sim="live">En juego</button><button class="btn secondary" data-sim="auto">Volver automático</button></div></details><div class="btnRow"><button class="btn secondary" id="closeAdmin">Cerrar</button></div></div></div>
+<div class="admin" id="admin"><div class="adminBox"><h2>Ajustes</h2><section class="favoriteBox"><h3>Elige equipo favorito</h3><p class="status">El banner, el resaltado y la búsqueda se centrarán en este equipo.</p><select id="mainTeamSelect"></select></section><details class="advancedBox"><summary>Configuración avanzada</summary><label>URL Apps Script</label><input id="urlInput"><div class="btnRow"><button class="btn" id="saveUrl">Guardar URL</button></div><h3>Herramientas</h3><div class="btnRow"><button class="btn danger" id="clearBtn">Borrar resultados locales</button></div><div class="status">Actualización automática: <select id="autoRefreshSelect"><option value="0">Nunca</option><option value="1">1 min</option><option value="5">5 min</option><option value="10" selected>10 min</option><option value="15">15 min</option><option value="30">30 min</option></select><br>Última actualización: <span id="lastUpdateLabel">-</span><br>Doble toque en el logo SBD para actualizar manualmente.</div><p id="updateStatus" class="status"></p><h3>Simular fecha/hora</h3><p class="status">Para probar AHORA, EN JUEGO y el banner durante el torneo.</p><input id="simTimeInput" type="datetime-local"><div class="btnRow"><button class="btn secondary" id="setSimTime">Usar fecha/hora simulada</button><button class="btn secondary" id="clearSimTime">Volver a hora real</button></div><p id="simTimeStatus" class="status"></p><h3>Simulador banner</h3><div class="btnRow"><button class="btn secondary" data-sim="normal">Estado normal</button><button class="btn secondary" data-sim="urgent">Falta &lt; 1 hora</button><button class="btn secondary" data-sim="live">En juego</button><button class="btn secondary" data-sim="auto">Volver automático</button></div></details><div class="btnRow"><button class="btn secondary" id="closeAdmin">Cerrar</button></div></div></div>
 <script>
 const LS={url:'wp_apps_url', main:'wp_main_team', results:'wp_results', status:'wp_status'};
 let DATA, teams={}, matches=[], results={}, ranks={}, activeDay=null, activePhase=null, activeNow=false, simMode='auto', simNow=null;
@@ -921,7 +961,7 @@ function filterButtons(){
   $('#dayFilters').classList.add('dayRow');
   $('#phaseFilters').classList.add('phaseRow');
   $('#dayFilters').innerHTML=`<div class="dayChips">${days.map(d=>`<button class="chip ${activeDay===d?'active':''}" data-day="${d}">${d}</button>`).join('')}<button class="chip nowChip ${activeNow?'active':''}" data-now="1">AHORA</button></div>`;
-  $('#phaseFilters').innerHTML=`<div class="phaseChips">${phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join('')}</div><button class="refreshInline" id="dayRefreshBtn" type="button" title="Actualizar resultados" aria-label="Actualizar resultados"><span class="refreshFull">↻ Resultados</span><span class="refreshIcon">↻</span></button>`;
+  $('#phaseFilters').innerHTML=`<div class="phaseChips">${phases.map(p=>`<button class="chip ${activePhase===p?'active':''}" data-phase="${p}">${p}</button>`).join('')}</div>`;
   $$('[data-day]').forEach(b=>{
     let d=b.dataset.day;
     b.disabled=!matches.some(m=>m.dayLabel===d&&(!activePhase||filterPhaseForCalendar(m)===activePhase));
@@ -1114,15 +1154,58 @@ function readPenaltyValue(v){
   if(s==='B'||s==='2'||s==='VISITANTE')return 'B';
   return null;
 }
-async function refreshResults(){let q=$('#dayRefreshBtn'); if(q){q.className='refreshInline loading';q.textContent='Actualizando…';} let url=localStorage.getItem(LS.url); if(!url){setStatus('Error: falta URL Apps Script.'); if(q){q.className='refreshInline err';q.textContent='Error';} return} setStatus('Actualizando…'); try{let txt=await fetch(url,{cache:'no-store'}).then(r=>r.text()); let raw=parseSheetResponse(txt); let rows=Array.isArray(raw)?raw:(raw.results||raw.data||raw.values||[]); let next={}; for(const row of rows){let code=normCode(row.Partido??row.partido??row.codigo??row.Codigo??row[0]); let a=readScoreValue(row['Goles A']??row.golesA??row.goles_a??row.a??row.A??row[2]); let b=readScoreValue(row['Goles B']??row.golesB??row.goles_b??row.b??row.B??row[3]); let pa=readScoreValue(row['Penaltis A']??row.penaltisA??row.penaltis_a??row.pa??row.PA??row[5]);
+async function refreshResults(){let q=$('#dayRefreshBtn'); if(q){q.className='refreshInline loading';q.innerHTML='<span class="refreshFull">Actualizando…</span><span class="refreshIcon">↻</span>';} let url=localStorage.getItem(LS.url); if(!url){setStatus('Error: falta URL Apps Script.'); if(q){q.className='refreshInline err';q.innerHTML='<span class="refreshFull">Error</span><span class="refreshIcon">↻</span>';} return} setStatus('Actualizando…'); try{let txt=await fetch(url,{cache:'no-store'}).then(r=>r.text()); let raw=parseSheetResponse(txt); let rows=Array.isArray(raw)?raw:(raw.results||raw.data||raw.values||[]); let next={}; for(const row of rows){let code=normCode(row.Partido??row.partido??row.codigo??row.Codigo??row[0]); let a=readScoreValue(row['Goles A']??row.golesA??row.goles_a??row.a??row.A??row[2]); let b=readScoreValue(row['Goles B']??row.golesB??row.goles_b??row.b??row.B??row[3]); let pa=readScoreValue(row['Penaltis A']??row.penaltisA??row.penaltis_a??row.pa??row.PA??row[5]);
       let pb=readScoreValue(row['Penaltis B']??row.penaltisB??row.penaltis_b??row.pb??row.PB??row[6]);
       if(code&&a!==null&&b!==null){
         next[code]={a,b};
         if(pa!==null&&pb!==null){next[code].pa=pa; next[code].pb=pb;}
-      } } results=next; localStorage.setItem(LS.results,JSON.stringify(results)); let stamp=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); setStatus(`Actualizado a las ${stamp}. Resultados cargados: ${Object.keys(results).length}`); if(q){q.className='refreshInline ok';q.textContent='Actualizado'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.innerHTML='<span class="refreshFull">↻ Resultados</span><span class="refreshIcon">↻</span>';}},1600);} renderAll(); }catch(e){console.error(e); if(q){q.className='refreshInline err';q.textContent='Error'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.innerHTML='<span class="refreshFull">↻ Resultados</span><span class="refreshIcon">↻</span>';}},2200);} setStatus('Error al conectar o leer resultados. Revisa que el Apps Script devuelva JSON/JSONP válido.');}}
+      } } results=next; localStorage.setItem(LS.results,JSON.stringify(results)); let stamp=new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); setStatus(`Actualizado a las ${stamp}. Resultados cargados: ${Object.keys(results).length}`); if(q){q.className='refreshInline ok';q.innerHTML='<span class="refreshFull">Actualizado</span><span class="refreshIcon">↻</span>'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.innerHTML='<span class="refreshFull">↻ Resultados</span><span class="refreshIcon">↻</span>';}},1600);} renderAll(); }catch(e){console.error(e); if(q){q.className='refreshInline err';q.textContent='Error'; setTimeout(()=>{const n=$('#dayRefreshBtn'); if(n){n.className='refreshInline';n.innerHTML='<span class="refreshFull">↻ Resultados</span><span class="refreshIcon">↻</span>';}},2200);} setStatus('Error al conectar o leer resultados. Revisa que el Apps Script devuelva JSON/JSONP válido.');}}
 function clearResults(){ if(!confirm('Esto borra sólo los resultados guardados en este móvil/navegador. No afecta al Google Sheet. ¿Continuar?'))return; results={}; localStorage.removeItem(LS.results); setStatus('Resultados locales borrados. Google Sheet intacto.'); renderAll();}
 function setStatus(t){$('#updateStatus').textContent=t; localStorage.setItem(LS.status,t)}
 init().catch(e=>{document.body.innerHTML='<pre>Error cargando la app: '+e.message+'</pre>'})
 </script>
 </body>
 </html>
+
+<script>
+(function(){
+let autoTimer=null;
+function startAuto(){
+  const sel=document.getElementById('autoRefreshSelect');
+  if(!sel) return;
+  localStorage.setItem('autoRefreshMinutes',sel.value);
+  if(autoTimer) clearInterval(autoTimer);
+  const mins=parseInt(sel.value||0,10);
+  if(mins>0){
+    autoTimer=setInterval(()=>{ if(document.visibilityState==='visible' && window.refreshResults) window.refreshResults(); }, mins*60000);
+  }
+}
+document.addEventListener('change',e=>{
+  if(e.target && e.target.id==='autoRefreshSelect') startAuto();
+});
+document.addEventListener('DOMContentLoaded',()=>{
+  const sel=document.getElementById('autoRefreshSelect');
+  if(sel){
+    const saved=localStorage.getItem('autoRefreshMinutes');
+    if(saved) sel.value=saved;
+    startAuto();
+  }
+  const logo=document.querySelector('.appLogo,img');
+  if(logo && window.refreshResults){
+    logo.ondblclick=()=>window.refreshResults();
+  }
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible' && window.refreshResults) window.refreshResults();
+  });
+});
+const oldRefresh=window.refreshResults;
+if(oldRefresh){
+ window.refreshResults=function(...a){
+   const r=oldRefresh.apply(this,a);
+   const el=document.getElementById('lastUpdateLabel');
+   if(el) el.textContent=new Date().toLocaleTimeString();
+   return r;
+ }
+}
+})();
+</script>
