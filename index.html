@@ -841,11 +841,15 @@
     .adminSection{border:1px solid var(--line);border-radius:18px;background:#fff;padding:12px;margin:10px 0}
     .adminSection h3{margin:0 0 8px;color:#1f2937}
     .adminGrid{display:grid;grid-template-columns:1fr;gap:10px}
-    .advancedGate{border:1px dashed #b8c2cc;border-radius:16px;background:#f8fafc;padding:12px;margin:10px 0}
+    .advancedBox{display:none}
+    .advancedBox.unlocked{display:block}
     .advancedContent.locked{display:none}
+    .advancedContent.unlocked{display:block}
     .adminDivider{height:1px;background:var(--line);margin:12px 0}
     .miniAdminTitle{font-size:12px;font-weight:1000;color:#607080;text-transform:uppercase;letter-spacing:.04em;margin:12px 0 6px}
-    .unlockLogo{border:2px solid #237A35;background:#eaf6ee;color:#237A35;border-radius:14px;padding:10px 14px;font-weight:1000;cursor:pointer}
+    .lastUpdateCard{border:2px solid #237A35;border-radius:18px;background:#eaf6ee;padding:12px;margin-top:4px}
+    .lastUpdateCard .label{font-size:12px;font-weight:1000;color:#237A35;text-transform:uppercase;letter-spacing:.04em}
+    .lastUpdateCard .value{font-size:20px;font-weight:1000;color:#123b25;margin-top:4px}
     .versionLine{display:none!important}
 
 </style>
@@ -863,8 +867,8 @@
 </div>
 <nav class="tabs"><div class="tabsInner"><button class="tab active" data-tab="calendar">Calendario</button><button class="tab" data-tab="search">Búsqueda</button><button class="tab" data-tab="groups">Grupos</button><button class="tab" data-tab="finals">Clasificación</button></div></nav>
 <div class="admin" id="admin"><div class="adminBox"><h2>Ajustes</h2>
-<section class="favoriteBox"><h3>Ajustes básicos</h3><div class="adminGrid"><div><label>Equipo favorito</label><p class="status">El banner, el resaltado y la búsqueda se centrarán en este equipo.</p><select id="mainTeamSelect"></select></div><div><label>Actualización automática</label><p class="status">Doble toque en el logo SBD para actualizar manualmente.</p><select id="autoRefreshSelect"><option value="0">Nunca</option><option value="1">Cada 1 minuto</option><option value="5">Cada 5 minutos</option><option value="10">Cada 10 minutos</option><option value="15">Cada 15 minutos</option><option value="30">Cada 30 minutos</option></select></div></div></section>
-<details class="advancedBox" id="advancedBox"><summary>Configuración avanzada</summary><div id="advancedGate" class="advancedGate"><p class="status">Para evitar cambios accidentales, toca 5 veces el botón SBD 2026 para mostrar las opciones avanzadas.</p><button class="unlockLogo" id="advancedUnlockTap" type="button">SBD 2026</button><p id="advancedUnlockStatus" class="status"></p></div><div id="advancedContent" class="advancedContent locked"><div class="adminSection"><h3>Versiones</h3><p class="status">Versión app: <strong>v1.47</strong></p><p class="status">Versión JSON/calendario: <strong>calendario definitivo 5-jun-26</strong></p></div><div class="adminSection"><h3>Resultados</h3><p class="status">Última actualización de resultados: <span id="lastUpdateSmall">Act. —</span></p><div class="btnRow"><button class="btn danger" id="clearBtn">Borrar resultados locales</button></div><p id="updateStatus" class="status"></p></div><div class="adminSection"><h3>Tests de tiempos</h3><p class="status">Para probar AHORA, EN JUEGO y el banner durante el torneo.</p><div class="miniAdminTitle">Simular fecha/hora</div><input id="simTimeInput" type="datetime-local"><div class="btnRow"><button class="btn secondary" id="setSimTime">Usar fecha/hora simulada</button><button class="btn secondary" id="clearSimTime">Volver a hora real</button></div><p id="simTimeStatus" class="status"></p><div class="adminDivider"></div><div class="miniAdminTitle">Simulador banner</div><div class="btnRow"><button class="btn secondary" data-sim="normal">Estado normal</button><button class="btn secondary" data-sim="urgent">Falta &lt; 1 hora</button><button class="btn secondary" data-sim="live">En juego</button><button class="btn secondary" data-sim="auto">Volver automático</button></div></div></div></details><div class="btnRow"><button class="btn secondary" id="closeAdmin">Cerrar</button></div></div></div>
+<section class="favoriteBox"><h3>Ajustes básicos</h3><div class="adminGrid"><div><label>Equipo favorito</label><p class="status">El banner, el resaltado y la búsqueda se centrarán en este equipo.</p><select id="mainTeamSelect"></select></div><div><label>Actualización automática</label><p class="status">Doble toque en el logo SBD para actualizar manualmente.</p><select id="autoRefreshSelect"><option value="0">Nunca</option><option value="1">Cada 1 minuto</option><option value="5">Cada 5 minutos</option><option value="10">Cada 10 minutos</option><option value="15">Cada 15 minutos</option><option value="30">Cada 30 minutos</option></select></div><div class="lastUpdateCard"><div class="label">Última actualización de resultados</div><div class="value" id="lastUpdateBasic">—</div></div></div></section>
+<section class="advancedBox" id="advancedBox"><div id="advancedContent" class="advancedContent locked"><div class="adminSection"><h3>Versiones</h3><p class="status">Versión app: <strong>v1.48</strong></p><p class="status">Versión JSON/calendario: <strong>calendario definitivo 5-jun-26</strong></p></div><div class="adminSection"><h3>Tests de tiempos</h3><p class="status">Para probar AHORA, EN JUEGO y el banner durante el torneo.</p><div class="miniAdminTitle">Simular fecha/hora</div><input id="simTimeInput" type="datetime-local"><div class="btnRow"><button class="btn secondary" id="setSimTime">Usar fecha/hora simulada</button><button class="btn secondary" id="clearSimTime">Volver a hora real</button></div><p id="simTimeStatus" class="status"></p><div class="adminDivider"></div><div class="miniAdminTitle">Simulador banner</div><div class="btnRow"><button class="btn secondary" data-sim="normal">Estado normal</button><button class="btn secondary" data-sim="urgent">Falta &lt; 1 hora</button><button class="btn secondary" data-sim="live">En juego</button><button class="btn secondary" data-sim="auto">Volver automático</button></div></div><div class="adminSection"><h3>Resultados</h3><div class="btnRow"><button class="btn danger" id="clearBtn">Borrar resultados locales</button></div><p id="updateStatus" class="status"></p></div></div></section><div class="btnRow"><button class="btn secondary" id="closeAdmin">Cerrar</button></div></div></div>
 <script>
 const LS={url:'wp_apps_url', main:'wp_main_team', results:'wp_results', status:'wp_status', auto:'wp_auto_refresh_min', last:'wp_last_update'};
 let DATA, teams={}, matches=[], results={}, ranks={}, activeDay=null, activePhase=null, activeNow=false, simMode='auto', simNow=null;
@@ -1012,11 +1016,19 @@ function updateQuickRefreshVisibility(tab){
   q.style.display=(tab==='calendar'||tab==='search'||tab==='groups')?'':'none';
 }
 
-function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); $('#banner').style.display=b.dataset.tab==='calendar'?'':'none'; if(b.dataset.tab==='search')renderTeamMatches(); }); $('#banner').style.display=''; $('#openAdmin').onclick=()=>{ const adv=document.querySelector('.advancedBox'); if(adv) adv.removeAttribute('open'); $('#admin').classList.add('open'); };
+function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel').forEach(x=>x.classList.remove('active')); b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active'); $('#banner').style.display=b.dataset.tab==='calendar'?'':'none'; if(b.dataset.tab==='search')renderTeamMatches(); }); $('#banner').style.display='';
+  const adminBtn=$('#openAdmin');
+  if(adminBtn){
+    adminBtn.onclick=()=>{ $('#admin').classList.add('open'); updateLastUpdateUI(); };
+    let pressTimer=null;
+    const startPress=()=>{ clearTimeout(pressTimer); pressTimer=setTimeout(()=>{ unlockAdvanced(); $('#admin').classList.add('open'); updateLastUpdateUI(); },1800); };
+    const endPress=()=>{ clearTimeout(pressTimer); };
+    adminBtn.addEventListener('mousedown',startPress); adminBtn.addEventListener('touchstart',startPress,{passive:true});
+    ['mouseup','mouseleave','touchend','touchcancel'].forEach(ev=>adminBtn.addEventListener(ev,endPress));
+  }
   const logoBtn=$('.appLogo');
   if(logoBtn){logoBtn.title='Doble toque: actualizar resultados'; logoBtn.ondblclick=()=>refreshResults(false);}
  $('#admin').addEventListener('click',e=>{if(e.target===$('#admin'))$('#admin').classList.remove('open');}); $('#closeAdmin').onclick=()=>$('#admin').classList.remove('open'); if(!localStorage.getItem(LS.auto))localStorage.setItem(LS.auto,'10'); const ars=$('#autoRefreshSelect'); if(ars){ars.value=localStorage.getItem(LS.auto)||'10'; ars.onchange=e=>{localStorage.setItem(LS.auto,e.target.value); setAutoRefresh(); setStatus('Actualización automática guardada.');};}
-  setupAdvancedAccess();
   const savedSim=localStorage.getItem('wp_sim_now')||'';
   if(savedSim){simNow=savedSim; const si=$('#simTimeInput'); if(si)si.value=toDateTimeLocalValue(new Date(savedSim)); const st=$('#simTimeStatus'); if(st)st.textContent='Simulando: '+new Date(savedSim).toLocaleString('es-ES');}
  const teamOpts=DATA.teams.slice().sort((a,b)=>shortTeamName(a.id).localeCompare(shortTeamName(b.id),'es')).map(t=>`<option value="${t.id}">${up(shortTeamName(t.id))}</option>`).join(''); const groupOpts=groupIds().map(g=>`<option value="GROUP_${g}">PARTIDOS GRUPO ${g}</option>`).join(''); $('#teamSelect').innerHTML=`<optgroup label="Equipos">${teamOpts}</optgroup><optgroup label="Grupos">${groupOpts}</optgroup>`; $('#mainTeamSelect').innerHTML=teamOpts; $('#teamSelect').value=mainTeam(); $('#mainTeamSelect').value=mainTeam(); $('#teamSelect').onchange=renderTeamMatches; $('#mainTeamSelect').onchange=e=>{localStorage.setItem(LS.main,e.target.value); $('#teamSelect').value=e.target.value; renderAll()}; if($('#clearBtn')) $('#clearBtn').onclick=clearResults;
@@ -1024,24 +1036,12 @@ function setupControls(){ $$('.tab').forEach(b=>b.onclick=()=>{ $$('.tab,.panel'
   if(setSim) setSim.onclick=()=>{let v=$('#simTimeInput').value;if(!v){const st=$('#simTimeStatus'); if(st)st.textContent='Elige fecha y hora.'; return;} simNow=v; localStorage.setItem('wp_sim_now',simNow); const st=$('#simTimeStatus'); if(st)st.textContent='Simulando: '+new Date(simNow).toLocaleString('es-ES'); renderAll();};
   if(clearSim) clearSim.onclick=()=>{simNow=null; localStorage.removeItem('wp_sim_now'); const st=$('#simTimeStatus'); if(st)st.textContent='Usando hora real.'; renderAll();};
  $$('[data-sim]').forEach(b=>b.onclick=()=>{simMode=b.dataset.sim; renderBanner();}); }
-function setupAdvancedAccess(){
-  const gate=$('#advancedGate'), content=$('#advancedContent'), btn=$('#advancedUnlockTap'), status=$('#advancedUnlockStatus');
-  if(!gate||!content||!btn)return;
-  let taps=0, timer=null;
-  btn.onclick=()=>{
-    taps++;
-    clearTimeout(timer);
-    if(taps>=5){
-      gate.style.display='none';
-      content.classList.remove('locked');
-      if(status)status.textContent='Configuración avanzada desbloqueada.';
-      taps=0;
-      return;
-    }
-    if(status)status.textContent=`${5-taps} toque${5-taps===1?'':'s'} más para desbloquear.`;
-    timer=setTimeout(()=>{taps=0; if(status)status.textContent='';},2500);
-  };
+function unlockAdvanced(){
+  const box=$('#advancedBox'), content=$('#advancedContent');
+  if(box) box.classList.add('unlocked');
+  if(content){ content.classList.remove('locked'); content.classList.add('unlocked'); }
 }
+
 
 function isLiveMatch(m){
   if(hasResult(m.id))return false;
@@ -1071,7 +1071,12 @@ function filterButtons(){
     b.onclick=()=>{activeNow=false;activePhase=activePhase===p?null:p;renderCalendar()}
   });
   const nb=$('[data-now]');
-  if(nb)nb.onclick=()=>{activeNow=!activeNow;if(activeNow){activeDay=null;activePhase=null;}renderCalendar()};
+  if(nb){
+    const nowAvailable=matches.some(m=>isNowRelevant(m)&&(!activeDay||m.dayLabel===activeDay)&&(!activePhase||filterPhaseForCalendar(m)===activePhase));
+    nb.disabled=!nowAvailable;
+    if(activeNow && !nowAvailable) activeNow=false;
+    nb.onclick=()=>{ if(nb.disabled)return; activeNow=!activeNow; renderCalendar(); };
+  }
   const rb=$('#dayRefreshBtn');
   if(rb)rb.onclick=refreshResults;
 }
@@ -1258,10 +1263,11 @@ function formatUpdateStamp(d=new Date()){
   return d.toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit'})+' · '+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
 }
 function updateLastUpdateUI(){
-  const el=$('#lastUpdateSmall');
-  if(!el)return;
   const saved=localStorage.getItem(LS.last);
-  el.textContent=saved?'Act. '+saved:'Act. —';
+  const basic=$('#lastUpdateBasic');
+  if(basic) basic.textContent=saved||'—';
+  const small=$('#lastUpdateSmall');
+  if(small) small.textContent=saved?'Act. '+saved:'Act. —';
 }
 function showRefreshToast(msg, ms=1400){
   const el=$('#refreshToast');
