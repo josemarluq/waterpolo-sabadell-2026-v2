@@ -814,14 +814,25 @@
     .appLogo.refreshing{animation:logoRefreshSpin .75s ease-in-out}
     @keyframes logoRefreshSpin{0%{transform:rotate(0deg) scale(1)}50%{transform:rotate(16deg) scale(.95)}100%{transform:rotate(0deg) scale(1)}}
 
+
+    /* v1.43: última actualización junto a la lista de partidos */
+    .calendarUpdate{
+      text-align:right!important;
+      margin:-2px 4px 6px!important;
+      font-size:10px!important;
+      color:#8a97a6!important;
+      font-weight:700!important;
+      line-height:1!important;
+    }
+
 </style>
 </head>
 <body>
 <div class="app">
-  <header class="top"><img class="appLogo" src="icon-192.png" alt="SBD 2026"><div class="title"><h1 id="appTitle">Waterpolo</h1><p id="appSub">Cargando campeonato…</p><p id="lastUpdateSmall" class="lastUpdateSmall">Act. —</p></div><div class="headerActions"><button class="adminBtn" id="openAdmin" aria-label="Admin">⋯</button></div></header>
+  <header class="top"><img class="appLogo" src="icon-192.png" alt="SBD 2026"><div class="title"><h1 id="appTitle">Waterpolo</h1><p id="appSub">Cargando campeonato…</p></div><div class="headerActions"><button class="adminBtn" id="openAdmin" aria-label="Admin">⋯</button></div></header>
   <div id="refreshToast" class="refreshToast"></div><section id="banner" class="banner"><small>PRÓXIMO PARTIDO</small><h2>Cargando…</h2></section>
   <main>
-    <section id="calendar" class="panel active"><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="calendarList"></div></section>
+    <section id="calendar" class="panel active"><div class="filters" id="dayFilters"></div><div class="filters" id="phaseFilters"></div><div id="lastUpdateSmall" class="lastUpdateSmall calendarUpdate">Act. —</div><div id="calendarList"></div></section>
     <section id="search" class="panel"><h3 class="sectionTitle">BUSCA POR EQUIPO O GRUPO</h3><select id="teamSelect"></select><div id="teamMatches"></div></section>
     <section id="groups" class="panel"><h3 class="sectionTitle">CLASIFICACIÓN DE GRUPOS</h3><div id="groupsBox" class="gridGroups"></div></section>
     <section id="finals" class="panel"><h3 class="sectionTitle">CLASIFICACIÓN FINAL</h3><div id="placesBox" class="places"></div></section>
