@@ -530,6 +530,52 @@
       .nowLine .nowPhase{font-size:12px!important}
     }
 
+
+    /* v1.36: corrección botón Resultados y fase en tercera línea en AHORA */
+    .nowPhase{
+      display:block!important;
+      margin-left:0!important;
+      margin-top:3px!important;
+      font-size:13px!important;
+      font-weight:500!important;
+      color:#607080!important;
+    }
+    .phaseRow .refreshInline{
+      align-self:flex-start!important;
+    }
+    @media(max-width:520px){
+      .phaseRow{
+        display:grid!important;
+        grid-template-columns:1fr!important;
+        gap:6px!important;
+      }
+      .phaseChips{
+        display:grid!important;
+        grid-template-columns:repeat(4,1fr)!important;
+        gap:6px!important;
+        width:100%!important;
+      }
+      .phaseChips .chip{
+        padding-left:0!important;
+        padding-right:0!important;
+        text-align:center!important;
+      }
+      .phaseChips .chip:last-child{
+        grid-column:1 / span 1!important;
+      }
+      .phaseRow .refreshInline{
+        justify-self:end!important;
+        margin:0!important;
+        min-width:auto!important;
+        width:auto!important;
+        text-align:center!important;
+        white-space:nowrap!important;
+      }
+      .nowPhase{
+        font-size:12px!important;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -751,8 +797,8 @@ function renderNowFieldsView(){
     const live=list.find(m=>isLiveMatch(m));
     const soon=list.find(m=>isSoonMatch(m,60));
     if(!live && !soon)continue;
-    const liveHtml=live?`<div class="nowBlock"><div class="nowLabel"><span class="liveDot"></span>En juego</div><div class="nowLine"><span class="nowTime">${live.time}</span>${fieldDisplayMatch(live)} <span class="nowPhase">(${nicePhaseLabel(live)})</span></div></div>`:'';
-    const soonHtml=soon?`<div class="nowBlock"><div class="nowLabel">⏰ Próximamente</div><div class="nowLine"><span class="nowTime">${soon.time}</span>${fieldDisplayMatch(soon)} <span class="nowPhase">(${nicePhaseLabel(soon)})</span></div></div>`:'';
+    const liveHtml=live?`<div class="nowBlock"><div class="nowLabel"><span class="liveDot"></span>En juego</div><div class="nowLine"><span class="nowTime">${live.time}</span>${fieldDisplayMatch(live)}<span class="nowPhase">(${nicePhaseLabel(live)})</span></div></div>`:'';
+    const soonHtml=soon?`<div class="nowBlock"><div class="nowLabel">⏰ Próximamente</div><div class="nowLine"><span class="nowTime">${soon.time}</span>${fieldDisplayMatch(soon)}<span class="nowPhase">(${nicePhaseLabel(soon)})</span></div></div>`:'';
     cards.push(`<article class="nowFieldCard"><div class="nowFieldHead"><span class="nowFieldName">${field}</span></div>${liveHtml}${soonHtml}</article>`);
   }
   return cards.length?`<section class="nowFieldsView">${cards.join('')}</section>`:'<p class="muted">No hay partidos en juego ni próximos en la siguiente hora.</p>';
