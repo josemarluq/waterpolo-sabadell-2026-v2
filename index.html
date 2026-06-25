@@ -1073,7 +1073,7 @@ function unlockAdvanced(){
 function isLiveMatch(m){
   if(hasResult(m.id))return false;
   const now=appNow(), dt=dateTime(m);
-  return now>=dt && now<new Date(dt.getTime()+40*60000);
+  return now>=dt && now<new Date(dt.getTime()+45*60000);
 }
 function isSoonMatch(m, minutes=60){
   if(hasResult(m.id))return false;
@@ -1123,7 +1123,7 @@ function renderFieldsNow(){
     const list=matches.filter(m=>m.field===field).sort((a,b)=>dateTime(a)-dateTime(b));
     const live=list.find(m=>{
       const dt=dateTime(m);
-      return !hasResult(m.id) && now>=dt && now<new Date(dt.getTime()+40*60000);
+      return !hasResult(m.id) && now>=dt && now<new Date(dt.getTime()+45*60000);
     });
     const next=list.find(m=>!hasResult(m.id) && dateTime(m)>now);
     if(live){
@@ -1252,7 +1252,7 @@ function renderBanner(){
     html=`<div class="finishedBanner"><div class="finishedTitle">CAMPEONATO DE ESPAÑA INFANTIL 2026 FINALIZADO</div><div class="finishedBody"><div class="finishedTeam"><img class="crest big" src="${t?logo(t):'logos/'+DATA.settings.genericLogo}" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='logos/${DATA.settings.genericLogo}';}"><div class="finishedTeamName">${up(shortTeamName(mt))}</div></div><div class="finishedPlace"><div class="date">PUESTO FINAL</div><div class="time">${place?place+'º':'—'}</div></div></div></div>`;
   }else{
     let dt=dateTime(pending), diff=dt-now, mins=Math.floor(diff/60000); let mode=simMode;
-    if(mode==='auto'){ if(diff<=0&&diff>-40*60000)mode='live'; else if(diff>0&&diff<60*60000)mode='urgent'; else mode='normal'; }
+    if(mode==='auto'){ if(diff<=0&&diff>-45*60000)mode='live'; else if(diff>0&&diff<60*60000)mode='urgent'; else mode='normal'; }
     if(simMode!=='auto')cls+=' test'; if(mode==='urgent')cls+=' urgent'; if(mode==='live')cls+=' live';
     let a=displayRefConfirmed(pending.teamA), b=displayRefConfirmed(pending.teamB);
     let title=mode==='live'?`<span class="liveDot"></span>EN JUEGO ${up(shortTeamName(mt))}`:mode==='urgent'?`<span class="clockDot">⏰</span>FALTAN ${Math.max(0,mins)} MIN · ${up(shortTeamName(mt))}`:`PRÓXIMO PARTIDO ${up(shortTeamName(mt))}`;
